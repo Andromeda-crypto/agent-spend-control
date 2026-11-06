@@ -1,41 +1,72 @@
 # Agent Spending Control
 
-Portable policy and durable request foundation for the November 6–8 Solana hackathon.
-This is an early backend increment; there is no dashboard, real provider or blockchain payment yet.
+A portable backend for delegating bounded resources to agents. Built in stages
+for the November 6–8 Solana hackathon. Current execution uses synthetic fixture
+data; there are no real provider calls or blockchain payments yet.
 
-Requires Node >=22 and PostgreSQL 17 (Docker Compose supplied).
+## Run the foundation
+
+Requires Node >=22 (CI targets 24; local verification used 26).
 
 ```sh
 npm ci
 npm run check
 npm test
+npm run demo
+```
+
+The terminal demo runs an embedded database, creates a task, executes a fixture
+request, requests owner approval, blocks an unapproved recipient, and revokes
+authority. All charges and results are explicitly synthetic. No credentials,
+Docker, network calls or funds are needed for the demo.
+
+## Run the durable HTTP gateway and worker
+
+Requires PostgreSQL 17. Use the supplied Compose service or an existing local
+instance. Set environment variables in your shell or your host's secret store;
+`.env.example` documents them but is not automatically loaded.
+
+```sh
 docker compose up -d
 export DATABASE_URL=postgres://spend:local-only@localhost:5432/spend
 npm run migrate
 npm run dev
 ```
 
-Gateway listens on localhost:3001. All routes require a high-entropy Bearer
-credential (at least 32 URL-safe characters). Create a task with a new owner
-credential; store it securely. The returned agent credential can only submit
-requests for that task. Credentials are stored as SHA-256 hashes; use TLS for
-any hosted gateway. This development bootstrap creates a workspace per task;
-it is not a user account/login system.
+The gateway defaults to `127.0.0.1:3001`. In a second terminal with the same
+DATABASE_URL, run a bounded worker pass:
 
-POST /tasks accepts a strict policy object:
-```json
-{"budget":"100","perRequest":"80","approvalAbove":"30","calls":4,"expiresAt":"2026-11-09T00:00:00Z","providers":["fixture"],"tools":["search"],"recipients":["reference"]}
+```sh
+ENABLE_FIXTURE_ADAPTER=true npm run worker:once
 ```
-POST /tasks/:task/requests requires an Idempotency-Key header and:
-```json
-{"provider":"fixture","tool":"search","recipient":"reference","amount":"20","input":{"query":"Solana research"}}
-```
-POST /tasks/:task/requests/:id/approve requires the owner credential.
-POST /tasks/:task/pause and /tasks/:task/revoke require the owner credential.
-Large integer monetary units are strings. Allowlist and budget failures are
-hard failures; approval only overrides the soft approval threshold.
 
-See [status](docs/STATUS.md), [architecture](docs/ARCHITECTURE.md), and
-[Solana investigation](docs/STAGE2.md). PostgreSQL is the runtime store;
-tests use embedded PostgreSQL through PGlite. Never use fixture tests as evidence
-of real API charges or on-chain payments.
+Each pass processes up to 100 reserved requests and reconciles up to 100
+dispatched requests. Run another pass after an approval or lost response.
+There is no automatic scheduler yet. The fixture adapter accepts only
+`fixture / search / service`, reserves exactly `"20"` synthetic units, and
+returns an explicitly synthetic research result. No arbitrary URL proxy exists.
+
+## Verify real PostgreSQL concurrency and recovery
+
+Install PostgreSQL 17 binaries, then run:
+
+```sh
+npm run test:postgres
+# macOS Homebrew, if the binaries are not on PATH:
+PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run test:postgres
+```
+
+The runner creates a temporary cluster on localhost, runs multi-connection and
+fresh-process tests, then stops and removes the cluster. It does not start a
+login service or alter an existing database. Alternatively use a disposable
+PostgreSQL database (the tests create persistent synthetic rows):
+
+```sh
+TEST_DATABASE_URL=postgres://spend:local-only@localhost:5432/spend_test \
+  node --import tsx --test 'test/postgres/*.test.ts'
+```
+
+CI runs these integration tests against a PostgreSQL 17 service.
+
+See [HTTP/SDK integration](docs/API.md), [architecture and recovery](docs/ARCHITECTURE.md),
+[current status](docs/STATUS.md), and [Solana investigation](docs/STAGE2.md).
