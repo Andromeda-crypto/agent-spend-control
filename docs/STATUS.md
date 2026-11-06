@@ -4,17 +4,18 @@
 
 The initial repository contained only a README and an initial commit. The
 first implementation checkpoint was da7fa04 on feat/durable-request-lifecycle.
-This increment continues on that branch. Node 26.12.1 / npm 11.20.0 are available.
+Implementation checkpoint 83d1460 continues on that branch. Node 26.12.1 / npm 11.20.0 are available.
 PostgreSQL 17.11 was installed through Homebrew for real-database verification;
 the tests use a disposable cluster, not a persistent background service.
 Docker, Rust, Solana CLI and Anchor have not been installed by this increment.
 
 ## Implemented
 
-Stage 0: pinned dependencies/lockfile, TypeScript checks, CI, reproducible
-embedded fixture terminal demo, local PostgreSQL service configuration, setup
-and architecture documentation. Fresh-clone verification is the final check
-for this checkpoint.
+Stage 0 is complete: pinned dependencies/lockfile, TypeScript checks, CI,
+reproducible embedded fixture terminal demo, local PostgreSQL service
+configuration, setup and architecture documentation. A clean local Git clone
+passed npm ci, type checking, the embedded tests, the demo and the real
+PostgreSQL integration suite without using the original node_modules.
 
 Stage 1, durable lifecycle increment:
 
@@ -43,9 +44,10 @@ and program test plan in STAGE2.md. No Solana program or compatibility claim.
 
 ## Verified
 
-Commands passed:
+Commands passed in the working repository and a clean local Git clone:
 
 ```sh
+npm ci # clean clone
 npm run check
 npm test
 npm run demo
