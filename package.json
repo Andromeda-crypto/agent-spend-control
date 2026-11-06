@@ -1,0 +1,25 @@
+{
+  "name": "agent-spend-control",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts",
+    "dev": "node --import tsx apps/gateway/src/server.ts",
+    "migrate": "node --import tsx scripts/migrate.ts"
+  },
+  "dependencies": {
+    "pg": "8.16.3",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
+    "@types/node": "24.10.0",
+    "@types/pg": "8.15.6",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  }
+}

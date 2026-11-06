@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: spend
+      POSTGRES_USER: spend
+      POSTGRES_PASSWORD: local-only
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["spend-data:/var/lib/postgresql/data"]
+volumes:
+  spend-data:
