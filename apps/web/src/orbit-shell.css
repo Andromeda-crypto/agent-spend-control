@@ -1,0 +1,56 @@
+.orbit-shell{display:block}
+.orbit-shell .sidebar{height:auto;position:sticky;top:0;z-index:8;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:24px;padding:16px 28px;border-right:0;border-bottom:1px solid #cbd7e7;background:linear-gradient(110deg,#fff,#e6edf6);box-shadow:0 3px 16px #20385806}
+.orbit-shell .sidebar .brand{font-size:13px;white-space:nowrap}
+.orbit-shell .sidebar .brand br{display:none}
+.orbit-shell .sidebar .logo{width:32px;height:34px;font-size:22px}
+.orbit-shell .sidebar>div:nth-child(2){margin-left:auto}
+.orbit-shell .sidebar .eyebrow{display:none}
+.orbit-shell .nav{display:flex;gap:5px}
+.orbit-shell .nav button{font-size:11px;padding:10px 12px;min-height:40px}
+.orbit-shell .nav-icon{width:23px}
+.orbit-shell .workspace{margin:0;padding:3px 0 3px 18px;border:0;border-left:1px solid #b9cbe1;border-radius:0;background:none;max-width:145px}
+.orbit-shell .workspace strong{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11px}
+.orbit-shell .workspace small{display:none}
+.orbit-shell .topbar{position:static;height:45px;background:#edf2f8;border-color:#d6e0ee}
+.orbit-shell .avatar{height:24px;width:24px;font-size:9px}
+.orbit-shell .content{max-width:1320px;padding:23px 30px 35px}
+.orbit-shell[data-view=Overview] .heading,.orbit-shell[data-view=Integration] .heading{margin-bottom:18px;gap:14px}
+.orbit-shell[data-view=Overview] .heading h1,.orbit-shell[data-view=Integration] .heading h1{font-size:15px;letter-spacing:-.2px}
+.orbit-shell[data-view=Overview] .heading .eyebrow,.orbit-shell[data-view=Integration] .heading .eyebrow,.orbit-shell[data-view=Overview] .heading .subtitle,.orbit-shell[data-view=Integration] .heading .subtitle{display:none}
+.orbit-shell .heading .actions button{font-size:10px;min-height:35px}
+.orbit-shell .connection{margin-bottom:16px;font-size:10px}
+.orbit-shell .orbit-console{margin-bottom:24px}
+.orbit-shell[data-view=Overview] .metrics{display:none}
+.orbit-shell[data-view=Overview] .note{font-size:10px;padding:10px 14px;background:transparent;border:0;border-bottom:1px solid #cfdaea;border-radius:0}
+.orbit-shell[data-view=Integration] .integration-hero{display:none}
+.orbit-shell #orbit-run-slot button{font-size:11px;padding:10px 14px;min-height:40px}
+.orbit-shell .integration-context{margin-top:25px}
+.orbit-shell .grid{gap:22px}
+.orbit-shell .workbench-inspector{top:88px;max-height:calc(100vh - 105px)}
+.orbit-shell .page-footer{font-size:9px}
+.orbit-shell #workflow,.orbit-shell #approval-inbox,.orbit-shell #task-receipts{scroll-margin-top:90px}
+.orbit-shell .orbit-inspection .orbit-detail-links{line-height:1.7}
+.orbit-shell .orbit-dock{border:0}
+.orbit-shell .orbit-bottom button{box-shadow:none}
+@media(max-width:1000px){.orbit-shell .sidebar{gap:15px;padding:13px 20px}
+.orbit-shell .workspace{display:none}
+.orbit-shell .nav button{padding:9px;font-size:10px}
+.orbit-shell .content{padding:22px}
+.orbit-shell .brand{font-size:12px}
+}
+@media(max-width:700px){.orbit-shell .sidebar{flex-wrap:wrap;gap:12px;padding:14px 17px;position:static}
+.orbit-shell .sidebar>div:nth-child(2){margin:0;width:100%}
+.orbit-shell .sidebar .brand{font-size:13px}
+.orbit-shell .nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+.orbit-shell .nav button{min-height:42px;padding:9px 2px;font-size:10px}
+.orbit-shell .topbar{height:41px;padding:0 18px}
+.orbit-shell .content{padding:20px 14px}
+.orbit-shell .heading{flex-direction:row;align-items:center}
+.orbit-shell .heading h1{font-size:13px!important}
+.orbit-shell .heading .actions{gap:5px}
+.orbit-shell .heading .actions button{padding:8px 7px;font-size:9px}
+.orbit-shell .heading #export{display:none}
+.orbit-shell .workbench-inspector{position:static;max-height:none}
+.orbit-shell .orbit-bottom{gap:10px}
+.orbit-shell .orbit-console{margin-bottom:18px}
+}
