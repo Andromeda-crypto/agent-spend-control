@@ -5,10 +5,11 @@ type Task = z.infer<typeof Snapshot>;
 type Owner = z.infer<typeof IdentityView>;
 export const escapeHTML = (value:unknown) => String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const e=escapeHTML;
-const pill=(state:string)=>`<span class="pill ${['approval','awaiting_approval','dispatched'].includes(state)?'warning':['failed','cancelled','stopped'].includes(state)?'error':state==='reserved'?'neutral':''}"><span class="dot"></span>${e(({approval:'Needs approval',awaiting_approval:'Needs approval',dispatched:'Awaiting confirmation',succeeded:'Completed',reserved:'Queued',complete:'Complete',running:'Running',failed:'Delivery failed',cancelled:'Cancelled',stopped:'Stopped'} as Record<string,string>)[state]??state)}</span>`;
+const pill=(state:string)=>`<span class="pill ${['approval','awaiting_approval','dispatched'].includes(state)?'warning':['failed','cancelled','stopped'].includes(state)?'error':['reserved','Revoked','Paused','Ready','Owner'].includes(state)?'neutral':''}"><span class="dot"></span>${e(({approval:'Needs approval',awaiting_approval:'Needs approval',dispatched:'Awaiting confirmation',succeeded:'Completed',reserved:'Queued',complete:'Complete',running:'Running',failed:'Delivery failed',cancelled:'Cancelled',stopped:'Stopped'} as Record<string,string>)[state]??state)}</span>`;
 export function createDashboard(root:HTMLElement, request:typeof fetch=fetch){
   const doc=root.ownerDocument,win=doc.defaultView!;
-  let token=win.sessionStorage.getItem('owner-key')??'',owner:Owner|undefined,tasks:Task[]=[],selected='',page='Overview',authLogin=false;
+  let token=win.sessionStorage.getItem('owner-key')??'',owner:Owner|undefined,tasks:Task[]=[],selected='',page=win.sessionStorage.getItem('dashboard-page')??'Overview',authLogin=false;
+  if(!['Overview','Integration','Approvals','Activity','Settings'].includes(page))page='Overview';
   let capabilities:{openaiConfigured?:boolean;liveEnabled?:boolean;fixtureEnabled?:boolean;localModelEnabled?:boolean;simulatedModelEnabled?:boolean;vaultConfiguration?:{program:string;cluster:string;agent:string;mint:string;recipientWallet:string}|null}={};
   let timer:ReturnType<typeof setTimeout>|undefined,loading=false,disposed=false,modalReturn:Element|null=null;
   let lastData='',connection='Connecting…';
@@ -28,8 +29,10 @@ export function createDashboard(root:HTMLElement, request:typeof fetch=fetch){
     const key=active?.id?`#${active.id}`:active?.dataset.page?`[data-page="${active.dataset.page}"]`:active?.dataset.task?`[data-task="${active.dataset.task}"]`:active?.dataset.approve?`[data-approve="${active.dataset.approve}"]`:null;
     const opened=Array.from(root.querySelectorAll('details')).map(d=>d.open);
     const position=win.scrollY;
+    const scrollPositions=Array.from(root.querySelectorAll<HTMLElement>('[data-scroll-key]')).map(el=>({key:el.dataset.scrollKey,top:el.scrollTop}));
     work();
     root.querySelectorAll('details').forEach((d,i)=>d.open=opened[i]??false);
+    root.querySelectorAll<HTMLElement>('[data-scroll-key]').forEach(el=>{const old=scrollPositions.find(s=>s.key===el.dataset.scrollKey);if(old)el.scrollTop=old.top;});
     if(key)(doc.querySelector<HTMLElement>(key)??doc.getElementById('workflow'))?.focus({preventScroll:true});
     if(typeof win.scrollTo==='function'&&!win.navigator.userAgent.includes('jsdom'))win.scrollTo(0,position);
   }
@@ -80,12 +83,12 @@ export function createDashboard(root:HTMLElement, request:typeof fetch=fetch){
     doc.getElementById('copy-tool')?.addEventListener('click',()=>void action(async()=>{await win.navigator.clipboard.writeText(doc.getElementById('tool-example')!.textContent??'');notify('Example copied. Supply the agent credential privately.');}));
     doc.getElementById('integration-task')?.addEventListener('change',event=>{selected=(event.target as HTMLSelectElement).value;win.sessionStorage.setItem('selected-task',selected);preserveRender(render);});
     doc.getElementById('demo-guide')?.addEventListener('click',guide);
-    doc.querySelectorAll<HTMLElement>('[data-page]').forEach(b=>b.addEventListener('click',()=>{page=b.dataset.page!;preserveRender(render);}));
-    doc.querySelectorAll<HTMLElement>('[data-task],[data-inspect]').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.task??b.dataset.inspect!;win.sessionStorage.setItem('selected-task',selected);page='Overview';preserveRender(render);}));
+    doc.querySelectorAll<HTMLElement>('[data-page]').forEach(b=>b.addEventListener('click',()=>{page=b.dataset.page!;win.sessionStorage.setItem('dashboard-page',page);preserveRender(render);}));
+    doc.querySelectorAll<HTMLElement>('[data-task],[data-inspect]').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.task??b.dataset.inspect!;win.sessionStorage.setItem('selected-task',selected);page='Overview';win.sessionStorage.setItem('dashboard-page',page);preserveRender(render);}));
     doc.querySelectorAll<HTMLElement>('[data-approve]').forEach(b=>b.addEventListener('click',()=>void action(async()=>{b.setAttribute('disabled','');try{const [task,id]=b.dataset.approve!.split(':');await api(`/tasks/${task}/requests/${id}/approve`,'POST',{});notify('Purchase approved. Execution resumes when the worker confirms authorization.');await refresh();}finally{if(b.isConnected)b.removeAttribute('disabled');}})));
     doc.getElementById('new-task')?.addEventListener('click',newTask);
     doc.getElementById('refresh')?.addEventListener('click',()=>void action(refresh));
-    doc.getElementById('sign-out')?.addEventListener('click',()=>{token='';owner=undefined;tasks=[];win.sessionStorage.removeItem('owner-key');render();});
+    doc.getElementById('sign-out')?.addEventListener('click',()=>{token='';owner=undefined;tasks=[];page='Overview';win.sessionStorage.removeItem('dashboard-page');win.sessionStorage.removeItem('owner-key');render();});
     doc.getElementById('rotate-owner')?.addEventListener('click',()=>modal('Rotate owner key?','The old key will stop working immediately. Save the replacement before leaving this screen.','',async()=>{const next=await api('/identity/rotate','POST',{});token=next.credential;win.sessionStorage.setItem('owner-key',token);closeModal();await refresh();secret('Replacement owner key',token);}));
     doc.getElementById('rotate-agent')?.addEventListener('click',()=>void action(async()=>{const next=await api(`/tasks/${selected}/agent/rotate`,'POST',{});secret('Replacement agent key',next.credential);}));
     doc.getElementById('pause')?.addEventListener('click',()=>void action(async()=>{await api(`/tasks/${selected}/${task?.paused?'resume':'pause'}`,'POST',{});await refresh();notify(task?.paused?'Task resumed. Cancelled requests are not reissued.':'Task paused. Pending requests were cancelled; dispatched work can remain billable.');}));

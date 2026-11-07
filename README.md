@@ -14,6 +14,8 @@ one governed tool into an existing agent without replacing its framework or mode
 > Devnet payments, a self-operated TEST token and reference service, and explicitly
 > simulated model output. It cannot approve purchases or spend funds.
 
+![Agent Spending Control public replay](docs/images/public-replay.png)
+
 ## Features
 
 - **Task-scoped authority:** separate owner and agent credentials, credential

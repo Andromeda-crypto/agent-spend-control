@@ -84,3 +84,19 @@ also passed real local payments/delivery, owner approval, simulated report,
 reconnect/refresh and confirmed revocation. Its test task is revoked as expected;
 all prior ledger/access/wallet state is retained. This establishes the selected
 internal pilot, not an outside customer adoption result.
+
+## Silver workbench polish — 2026-11-07
+
+The public site and private console now share silver, graphite and cool-gray
+materials. Public layout gained an illustrated policy panel, section navigation
+and a split hero. The private Integration screen gained task context and section
+anchors, a matte code panel, and a separately scrollable sticky task/receipt
+inspector. Active view survives browser refresh; inspector scroll survives data-driven redraws.
+
+`npm run test:design` passed in installed Chrome at 1440/375px: public hero,
+policy panel, private overview/workbench, code, desktop/mobile modal overlays,
+keyboard opener restoration, viewport bounds and no credential rendering. Actual
+screenshots were reviewed; mobile dialog width was corrected. The public artifact
+suite also passed all scenes, CSP, focus and 1440/375/320px overflow checks. No
+purchase, approval or revocation was sent by these visual checks. Native Safari,
+physical-device and screen-reader review remain unverified.

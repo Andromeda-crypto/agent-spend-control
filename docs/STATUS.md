@@ -2,16 +2,34 @@
 
 ## Resume here
 
-Branch: `feat/vault-agent-dashboard`. Priority has pivoted to **one developer
-integrating one governed tool into an existing agent**, before broad self-service
-onboarding or a public live backend. README is product-facing; operational
-history belongs here.
+Branch: `feat/vault-agent-dashboard`. The internal research-agent pilot is
+implemented and verified. Current increment polishes the public/private UI in
+silver and graphite, with a restructured scrollable Integration workbench.
+Public site: **https://agent-spend-control-replay.vercel.app**; deployment evidence
+is in [public-replay.json](deployments/public-replay.json).
 
-Public replay: **https://agent-spend-control-replay.vercel.app**. Updated public source: `6d3ff35c501cfeb3961bbf4f3e2cd51173517dac`. The verified
-public release is recorded in [public-replay.json](deployments/public-replay.json).
-The private Integration workspace and external-agent tool are implemented and
-locally verified; the next real-world milestone is an outside developer pilot.
-No external adopter or customer integration is claimed yet.
+The public surface remains read-only; owner console/live execution remain private.
+No external customer adoption is claimed. No Devnet program/buffer changes,
+wallet/access-file resets or billable API calls are authorized or performed.
+
+## Silver interface increment — 2026-11-07
+
+- Public: split editorial hero with illustrated policy schematic; anchored product
+  navigation, sticky header/scene navigation, clear replay/developer/evidence
+  sections, reflective silver surfaces and graphite actions.
+- Private: task context bar, anchored setup sections, matte code editor panel,
+  separately scrollable sticky policy/receipt inspector and a responsive stacked
+  mobile layout. Tab choice survives refresh; inspector scroll survives updates.
+- Silver/graphite typography, borders, focus rings, subtle highlights and stronger
+  supporting-text contrast. Outcome colors stay semantic; engineering signatures,
+  policy/binding checks and network costs remain inspectable.
+- Reworked modal/backdrop material, keyboard focus return and explicit mobile
+  width bounds. Screenshots reviewed at desktop and narrow widths.
+- `npm run test:design` is a read-only Chrome check against an existing local
+  stack. It covers public hero/policy, private overview/workbench/code, modal fit,
+  active-section refresh and absence of credentials. No spending actions are sent.
+- TypeScript, both production builds and the public production-artifact Chrome
+  check pass. Payment/backend contracts and the existing Solana state are unchanged.
 
 ## Developer pilot increment — 2026-11-07
 
