@@ -14,7 +14,7 @@ Deployed source: `d0b4df3334220e6de75c82da3fd3e778f7cc400c`; deployment
 `dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Anonymous hosted verification and file
 hashes are in [public-replay.json](deployments/public-replay.json).
 [PR #2](https://github.com/Andromeda-crypto/agent-spend-control/pull/2) carries
-this increment; merge after its current-head checks pass. Existing feature histories were merged through
+this increment. GitHub records its current check and merge status. Existing feature histories were merged through
 [PR #1](https://github.com/Andromeda-crypto/agent-spend-control/pull/1).
 No external customer adoption is claimed.
 

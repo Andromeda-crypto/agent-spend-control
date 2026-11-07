@@ -119,7 +119,7 @@
     "Explorer plain HTTP clients may be rate-limited",
     "Native mobile/Safari and screen-reader review remain"
   ],
-  "developerGuide": "https://github.com/Andromeda-crypto/agent-spend-control/blob/feat/vault-agent-dashboard/docs/INTEGRATION.md",
+  "developerGuide": "https://github.com/Andromeda-crypto/agent-spend-control/blob/main/docs/INTEGRATION.md",
   "developerGuideStatus": 200,
-  "theme": "silver-graphite"
+  "theme": "orbit-silver-graphite"
 }
