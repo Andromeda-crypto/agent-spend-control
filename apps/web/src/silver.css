@@ -1158,3 +1158,7 @@ html {
     scroll-behavior:auto;
   }
 }
+
+.receipt-scroll .delivery-line.delivery-failed {
+  color: #9b5750 !important;
+}
