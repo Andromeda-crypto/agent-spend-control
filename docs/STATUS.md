@@ -4,7 +4,7 @@
 
 Branch: `feat/vault-agent-dashboard`.
 The previous staged checkpoint was committed as `a37f078` at the start of this
-session. This increment completes the secure provisioning and complete local
+session. Implementation checkpoint: `9b2f195`. This increment completes the secure provisioning and complete local
 payment/service/dashboard workflow that checkpoint was missing.
 
 **Billable OpenAI calls remain unauthorized.** The user selected “Prepare
@@ -97,7 +97,11 @@ npm run devnet:plan
 - Prior checkpoint: 4 native Rust tests and the SBF build passed. Rust program
   enforcement source is unchanged in this increment.
 
-Fresh-checkout verification for this increment is pending.
+Fresh checkout of `9b2f195`: `npm ci` (zero audit vulnerabilities),
+TypeScript check, production web build and fixture terminal demo all passed.
+The local multi-process smoke also passed on two successive retained-state
+launches. The full chain suite uses this machine's installed toolchain/build;
+a clean-machine toolchain installation has not been independently reproduced.
 Remote CI, real-browser visual QA, production hosting and restore tests have not
 been run. No billable API request or real-money transaction was made.
 
@@ -134,7 +138,8 @@ old tokens are not silently reactivated.
 - Program: `8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6`.
 - Deployer / intended upgrade authority:
   `ATJeSsM6kshKaTp4MVipQaTksNpEdAvkYkc7ofY1rU9V`.
-- Retained buffer: `AQRxVer3WRTRdmRCiuimBtVCv6dQCA5W4rpB5pdhRY1x`.
+- Remaining deployer balance after verified demo: 0.41962504 free Devnet SOL.
+- Deployment buffer (consumed by finalization; its local keypair is retained): `AQRxVer3WRTRdmRCiuimBtVCv6dQCA5W4rpB5pdhRY1x`.
 - Private paths: `.local/program-keypair.json`,
   `.local/devnet-deployer.wallet.json`, `.local/devnet-buffer.wallet.json`.
 - Initial native CLI uploads stalled; the pinned CLI's UDP path ignored the

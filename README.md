@@ -3,9 +3,9 @@
 Delegate bounded resources to agents, approve exceptions, revoke access, and
 inspect itemized usage. Current checkpoint: working fixture dashboard and durable
 research workflow, explicit identities and credential rotation, and a Solana
-vault verified with actual local-validator transactions.
+vault verified with actual local-validator and finalized Devnet transactions.
 
-The complete local payment/service/dashboard path is verified. Model responses
+The complete local and Devnet payment/service/dashboard paths are verified. Model responses
 can be simulated without an API key. Actual OpenAI calls remain disabled by
 user instruction. See [STATUS.md](docs/STATUS.md) for current Devnet deployment
 and remaining release work.
