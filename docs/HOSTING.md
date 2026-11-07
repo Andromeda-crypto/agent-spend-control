@@ -132,3 +132,46 @@ restore test, confirm UID/mount permissions and tunnel isolation, then run one
 bounded test-token session. These containers have not been run here because
 Docker is unavailable. Both Compose files parse as YAML with aliases; this
 is not Docker schema/runtime validation. No hosting account, paid service or DNS was provisioned.
+
+## Verified Vercel release — 2026-11-07
+
+Public URL: **https://agent-spend-control-replay.vercel.app**.
+Project `agent-spend-control-replay`, ID `prj_W4cajKyHwSpPwGc1CpszobIPTX7P`,
+team `om-anands-projects` / `team_9YEej6OOcOp6uCXYUEMJPfBa`, Hobby.
+Source commit `d7f4c26f7c050b57db766c281123d29d2fb8923d`; public deployment
+record: [public-replay.json](deployments/public-replay.json).
+
+The release uploaded five files: built HTML, JS, CSS, allowlisted evidence JSON
+and `apps/replay/vercel.json`. No repository root or operator runtime was uploaded.
+The Vercel project has no Git auto-deploy connection; a push does not release.
+No model/environment secrets are required or configured. Production toolbar is
+disabled; the stable production alias is anonymous public access. Preview and
+unique deployment URLs may require Vercel authentication: share the stable URL.
+
+Repeatable release from a reviewed commit:
+
+```sh
+npm run check
+npm run test:replay
+node --import tsx scripts/package-replay.ts
+vercel project inspect agent-spend-control-replay --scope om-anands-projects
+vercel deploy --cwd .local/public-replay-deploy --project prj_W4cajKyHwSpPwGc1CpszobIPTX7P --scope om-anands-projects --prod --dry --json
+# Inspect the five-file manifest. Then explicitly deploy that same directory,
+# using --meta sourceCommit=<full-reviewed-commit-SHA> to record provenance.
+# Never run deploy from the repository root or run env pull into the artifact.
+PUBLIC_REPLAY_URL=https://agent-spend-control-replay.vercel.app node test/browser/hosted-replay.mjs
+```
+
+The package helper rejects known private credential content and unexpected/stale
+staging paths. If it reports stale artifacts, inspect the generated staging
+folder; do not delete unrelated `.local` state. `vercel.json` supplies CSP,
+HSTS, nosniff, frame denial, Referrer-Policy and Permissions-Policy. No API proxy,
+functions, rewrites, backend, signer or wallet is part of this deployment.
+The only supported application path is `/`, with scene hashes `#0`–`#6`;
+unsupported paths intentionally 404. Real Chrome verified direct scene navigation,
+refresh, 1440/375/320px, evidence, console silence and static-only GET requests.
+
+External Explorer can throttle automated HTTP clients (429); both links returned
+200 in real Chrome, and independent read-only Devnet signature checks confirmed
+finality. Native mobile/Safari and screen-reader audit, long-term uptime monitoring
+and the private hosted stack remain separate work. No Docker stack was deployed.

@@ -1,11 +1,45 @@
-# Status — 2026-11-06
+# Status — 2026-11-07
 
 ## Resume here
 
-Branch: `feat/vault-agent-dashboard`. Starting checkpoints: implementation
-`9b2f195`, verification notes `ee9579e`. This increment prepares the external demo;
-Completed demo-polish work is committed and pushed to this branch for
-the overnight handoff. No application or service has been published.
+Branch: `feat/vault-agent-dashboard`. Public replay is live:
+**https://agent-spend-control-replay.vercel.app**
+
+Deployed source commit: `d7f4c26f7c050b57db766c281123d29d2fb8923d`.
+Vercel project: `agent-spend-control-replay` in `om-anands-projects` (Hobby).
+Production deployment: `dpl_8HBSdDX1sYWBo5QMe3kXfALGB8kN`, READY.
+Only the locally built replay artifact and public security configuration were
+uploaded: five files, no repository sources, private env/config or runtime.
+The operator console and all live execution remain private and stopped.
+See [public release evidence](deployments/public-replay.json).
+
+## Verified public release — 2026-11-07
+
+- Anonymous HTTPS returns 200 without login or a protection bypass. The stable
+  production alias is public; deployment-specific/preview URLs may retain Vercel
+  authentication. Share the stable URL above.
+- Real Chrome: direct navigation and refresh for all seven `/#0`–`/#6` scenes,
+  keyboard navigation, 1440/375/320px layouts, no horizontal overflow or browser
+  JavaScript/console errors. Hosted screenshots inspected.
+- CSP restricts scripts/styles/connections to self; HSTS, nosniff, frame denial,
+  no-referrer and restricted Permissions-Policy observed on HTTPS responses.
+- Browser requests were same-origin static GETs only: no Authorization, API,
+  Solana RPC, model requests, wallet actions or live spending. Privileged and
+  private-file paths and unsupported routes return 404.
+- All four hosted public files match the audited build byte-for-byte.
+- Hosted evidence exactly matches the allowlisted Devnet checkpoint. Read-only
+  RPC independently reconfirmed both signatures finalized with no error. Both
+  correct `?cluster=devnet` Explorer links returned 200 in Chrome. A plain HTTP
+  client received Explorer 429; this third-party throttling does not affect the
+  replay or invalidate the independently checked transactions.
+- TypeScript, local production replay Chrome tests and static-package audit pass.
+  A post-deploy test harness fix handles hash navigation as a full-document check;
+  it changes no hosted replay assets. Deployment metadata confirms source SHA.
+- CLI 65.12.1 installed globally and authenticated as `andromeda-crypto`. Existing
+  Vercel plugin/connector retained. Connector project creation was denied; the
+  authenticated CLI fallback created/deployed the verified project successfully.
+  No duplicate project, Git auto-deploy connection, custom domain, paid service,
+  model call or new Solana transaction was created.
 
 **Preserved:** the verified Devnet program, authority, wallets, ledger and DB.
 No program redeploy, upgrade, replacement buffer or Devnet transaction was made
@@ -48,7 +82,7 @@ this increment. Private keys/access remain under ignored `.local/`.
 - [DEMO_SCRIPT.md](DEMO_SCRIPT.md): concise walkthrough, safe new-task procedure,
   fresh-visitor instructions and labeled replay fallback.
 
-## Verified this increment
+## Prior checkpoint verification — 2026-11-06
 
 - TypeScript check and both production web builds pass.
 - 10 Node tests, 7 real PostgreSQL/HTTP tests and 15 local program/full-workflow
@@ -61,8 +95,8 @@ this increment. Private keys/access remain under ignored `.local/`.
   requests, loading/error, all scenes, focus/refresh and 1440/375/320px.
 - Screenshots inspected; findings/fixes in [BROWSER_QA.md](BROWSER_QA.md).
 - Both Compose files parse as YAML; Docker schema/runtime validation remains.
-- No privileged console was published, no hosting/service provisioned, no real
-  funds or billable API calls used.
+- No privileged console was published and no real funds or billable API calls
+  were used. The public replay was subsequently published as described above.
 
 ## Run / demonstrate
 
@@ -100,10 +134,10 @@ Do not run `devnet:deploy` merely to resume this work.
 
 ## Hosted readiness / smallest blockers
 
-The public replay is prepared as an isolated static artifact. Choose an existing
-static host, publish **only `apps/replay/dist`**, and verify its HTTPS origin,
-evidence loading, CSP/headers and mobile refresh there. No service is provisioned.
-The prepared public container is an alternative, not a verified deployment.
+The public static replay is deployed and verified. There is no remaining hosting
+blocker for that read-only milestone. The current release is manually uploaded;
+repository pushes do not auto-publish. Rebuild/audit/redeploy only the isolated
+artifact, never deploy the repository root. See [HOSTING.md](HOSTING.md).
 
 Docker is unavailable here: Dockerfile image builds, Compose runtime and mounted
 signer UID access still need verification on a Docker-equipped machine. The
@@ -117,18 +151,17 @@ DB least privilege, monitoring, rate limits, supervised schedules and broader
 security review remain product work. Actual OpenAI integration remains mock-
 tested only until fresh explicit cost authorization and secure configuration.
 
-## Overnight handoff
+## Preserved local state / next action
 
-Implementation stopped at the user's request. The session-owned local demo
-launcher and its gateway, worker, owner synchronizer, reference service, replay,
-web, PostgreSQL and validator have stopped gracefully. Database, validator
-ledger, wallet and private access files are retained; nothing was reset or
-redeployed. The browser-tested local task is permanently revoked as expected.
+The previous session's gateway, worker, owner synchronizer, reference service,
+PostgreSQL and validator remain stopped. This release used only temporary
+browser tests, static packaging and read-only chain inspection. Databases,
+validator ledger and private wallet/access files were retained. The last
+browser-tested local task is revoked as expected; seed a new bounded local task
+only when resuming the private workflow. Do not reset existing state.
 
-**Exact next action:** review this checkpoint, choose an existing static hosting
-destination for the public replay, then publish only `apps/replay/dist` and
-verify HTTPS, evidence loading, headers and narrow-screen refresh on that origin.
-Do not expose the operator console. Do not provision paid services or make
-billable OpenAI calls without authorization. For another local walkthrough,
-start `local:demo -- --new-task` using the command above; preserve prior state.
-Docker/private-stack runtime and restore verification remain separate gates.
+**Exact next action:** share the public replay and collect demo feedback. The next
+engineering milestone is Docker/private-stack runtime and DB backup/restore
+verification, followed by private hosted access checks. Public live visitor
+isolation is still unimplemented; no public execution or billable OpenAI calls.
+Do not run Solana deployment/upgrade commands to resume this work.

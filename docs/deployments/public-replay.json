@@ -1,0 +1,104 @@
+{
+  "url": "https://agent-spend-control-replay.vercel.app",
+  "deploymentUrl": "https://agent-spend-control-replay-ica6bqhnr-om-anands-projects.vercel.app",
+  "deploymentId": "dpl_8HBSdDX1sYWBo5QMe3kXfALGB8kN",
+  "project": "agent-spend-control-replay",
+  "projectId": "prj_W4cajKyHwSpPwGc1CpszobIPTX7P",
+  "teamId": "team_9YEej6OOcOp6uCXYUEMJPfBa",
+  "target": "production",
+  "readyState": "READY",
+  "sourceCommit": "d7f4c26f7c050b57db766c281123d29d2fb8923d",
+  "verifiedAt": "2026-11-07T17:30:37.933Z",
+  "headers": {
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    "referrer-policy": "no-referrer",
+    "strict-transport-security": "max-age=31536000",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY"
+  },
+  "evidenceSignatures": [
+    "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
+    "4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J"
+  ],
+  "widths": [
+    1440,
+    375,
+    320
+  ],
+  "scenes": 7,
+  "browserErrors": [],
+  "requestCount": 168,
+  "publicWithoutAuth": true,
+  "privilegedPaths404": true,
+  "staticGetOnly": true,
+  "files": [
+    {
+      "path": "evidence.json",
+      "sha256": "c31d21eb88f7f7bc05807ac80ed544c9612b3343c36ab0696689cf26712d4d58"
+    },
+    {
+      "path": "index.html",
+      "sha256": "9b9f7898509d73def6520dc06dadad8ff5c0e9f0a128982917f5d89111618ecb"
+    },
+    {
+      "path": "assets/index-BO_lNCMk.css",
+      "sha256": "3c70b1b40476797de93d7f6c5ba52acf940484fa28eed68669ad90aacdd632cb"
+    },
+    {
+      "path": "assets/index-CTmO0GJ1.js",
+      "sha256": "677b2f015c68a2e7014d79395fdba13d05d06431b2f46fa42038114d29c0f2f6"
+    },
+    {
+      "path": "vercel.json",
+      "sha256": "08b527f27def7bb4b6ff9ac41dad4bf462634444141927d2954baf767be219ad"
+    }
+  ],
+  "chainVerification": {
+    "verifiedAt": "2026-11-07T17:30:05.439Z",
+    "method": "getSignatureStatuses",
+    "cluster": "devnet",
+    "signatures": [
+      {
+        "signature": "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
+        "confirmationStatus": "finalized",
+        "confirmations": null,
+        "err": null,
+        "slot": 519495339,
+        "status": {
+          "Ok": null
+        }
+      },
+      {
+        "signature": "4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J",
+        "confirmationStatus": "finalized",
+        "confirmations": null,
+        "err": null,
+        "slot": 519495367,
+        "status": {
+          "Ok": null
+        }
+      }
+    ],
+    "readOnly": true
+  },
+  "explorerChecks": [
+    {
+      "url": "https://explorer.solana.com/tx/588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9?cluster=devnet",
+      "status": 200,
+      "correctDevnetURL": true
+    },
+    {
+      "url": "https://explorer.solana.com/tx/4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J?cluster=devnet",
+      "status": 200,
+      "correctDevnetURL": true
+    }
+  ],
+  "limitations": [
+    "Recorded read-only replay, simulated model, self-operated TEST/service",
+    "Blocked/revocation scenes illustrated from local tests",
+    "No public live execution or private backend deployed",
+    "Explorer plain HTTP clients may be rate-limited",
+    "Native mobile/Safari and screen-reader review remain"
+  ]
+}

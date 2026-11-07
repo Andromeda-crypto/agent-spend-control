@@ -22,7 +22,7 @@ try{
  for(const width of [1440,375,320]){
   await page.setViewportSize({width,height:900});
   for(let i=0;i<7;i++){
-   const res=await page.goto(`${canonical}/#${i}`);assert.equal(res.status(),200);await page.locator(`[data-scene="${i}"][aria-current]`).waitFor();
+   await page.goto('about:blank');const res=await page.goto(`${canonical}/#${i}`);assert.equal(res.status(),200);await page.locator(`[data-scene="${i}"][aria-current]`).waitFor();
    if(i>=3)await page.locator('.receipt').first().waitFor();
    await page.reload();await page.locator(`[data-scene="${i}"][aria-current]`).waitFor();
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);

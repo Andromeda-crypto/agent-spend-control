@@ -133,6 +133,8 @@ See [HTTP/SDK integration](docs/API.md), [architecture](docs/ARCHITECTURE.md),
 
 ## External demonstration
 
+Public demo: **https://agent-spend-control-replay.vercel.app**
+
 The public experience is a separate, credential-free **read-only replay**:
 
 ```sh

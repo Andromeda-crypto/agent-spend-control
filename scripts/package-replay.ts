@@ -18,4 +18,6 @@ files.push({file:'vercel.json',data:Buffer.from(await readFile('apps/replay/verc
 await mkdir('.local',{recursive:true});await writeFile('.local/public-replay-upload.json',JSON.stringify(files),{mode:0o600});
 const destination=resolve('.local/public-replay-deploy');await mkdir(destination,{recursive:true});
 for(const file of files){const path=resolve(destination,file.file);await mkdir(resolve(path,'..'),{recursive:true});await writeFile(path,Buffer.from(file.data,'base64'));}
+const expected=new Set(files.map(f=>f.file));
+for(const path of await readdir(destination,{recursive:true}))if(path!=='assets'&&!expected.has(path))throw Error('Unexpected stale staging file; inspect the generated public-replay-deploy directory before uploading.');
 console.log(`Audited ${files.length} static/config files; no repository sources, private config, wallets, API handlers or operator credentials included.`);
