@@ -55,3 +55,19 @@ Native Safari/iOS/Android, screen-reader review, target-host HTTPS/TLS and ingre
 Docker image/Compose runtime, database restore and the hosted private tunnel are
 not verified. This is not a comprehensive accessibility or custody-security audit.
 See [HOSTING.md](HOSTING.md) for concrete deployment gates and boundaries.
+
+## Existing-agent integration — 2026-11-07
+
+The new private Integration workspace was exercised in Chrome at 1440/375px.
+A separate CLI process, holding only its scoped agent credential, purchased basic
+reference data, waited for owner premium approval in the browser, received both
+actual local-token service deliveries and repeated the same job without another
+payment. Task selector, readable readiness/limits, copy-example action, request
+outcomes and credential-free screenshots were checked. Navigation icons were
+marked decorative so controls have stable accessible names. The refined design
+was reviewed on desktop and narrow views; mobile navigation fits all five tabs.
+
+The public site gained a developer entry point and guide link. Its deployed
+production artifact passed the existing anonymous hosted checks and byte audit;
+no privileged runtime was published. The real outside-developer pilot is still
+pending selection of an actual agent/repository.

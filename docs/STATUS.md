@@ -7,7 +7,7 @@ integrating one governed tool into an existing agent**, before broad self-servic
 onboarding or a public live backend. README is product-facing; operational
 history belongs here.
 
-Public replay: **https://agent-spend-control-replay.vercel.app**. Last verified
+Public replay: **https://agent-spend-control-replay.vercel.app**. Updated public source: `6d3ff35c501cfeb3961bbf4f3e2cd51173517dac`. The verified
 public release is recorded in [public-replay.json](deployments/public-replay.json).
 The private Integration workspace and external-agent tool are implemented and
 locally verified; the next real-world milestone is an outside developer pilot.
@@ -35,7 +35,9 @@ Verified:
 - Real Chrome + independent CLI process: basic 20 TEST payment, premium 40 TEST
   approval and delivery, integration receipts, retry returning the same request,
   1440/375px with no credential rendering or horizontal overflow. Screenshots
-  reviewed. Public production-artifact Chrome checks remain passing.
+  reviewed. Public production-artifact and hosted Chrome checks pass; all public files
+  match the audit byte-for-byte, the developer guide returns 200, and no public
+  execution or private console was deployed.
 
 Private local stack was started for verification with a new bounded task; it
 retains DB/ledger/wallet/access state. The pilot task has 60 TEST spent and 60

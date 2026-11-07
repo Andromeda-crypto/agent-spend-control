@@ -175,3 +175,15 @@ External Explorer can throttle automated HTTP clients (429); both links returned
 200 in real Chrome, and independent read-only Devnet signature checks confirmed
 finality. Native mobile/Safari and screen-reader audit, long-term uptime monitoring
 and the private hosted stack remain separate work. No Docker stack was deployed.
+
+## Developer-pilot site update
+
+The stable public URL now includes the developer-pilot entry point and integration
+guide link. Updated deployed source:
+`6d3ff35c501cfeb3961bbf4f3e2cd51173517dac`, deployment
+`dpl_Ao9w3m39iS4CQ6EYkJWdEFQtVcay`. The public release record above tracks this
+latest version; the initial `d7f4c26` release remains in Git history.
+Only five static/config files were uploaded again. Hosted anonymous Chrome checks,
+security headers, all scene routes/refresh, 1440/375/320px, exact bytes, evidence
+and guide link passed. The operational Integration workspace is still private;
+this public update does not enable an agent API or wallet/signing access.
