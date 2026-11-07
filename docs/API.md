@@ -98,3 +98,33 @@ The former persists the synthetic provider receipt and then loses the response;
 the next worker pass looks it up without sending the purchase again. The
 latter confirms a synthetic charge while recording failed delivery. These
 options are fixture-only. They do not simulate a real on-chain transaction.
+
+## Identity and dashboard additions
+
+`POST /owners` accepts `{"name":"Research workspace"}` and returns an owner ID,
+workspace ID, name and one-time owner credential. `GET /identity` lists that
+owner's task agents. `POST /identity/rotate` returns a replacement owner
+credential and immediately revokes the previous credential; replaying the old
+credential cannot bootstrap access to the old workspace.
+
+`POST /tasks/:task/agent/rotate` replaces the agent credential. The owner-only
+`POST /tasks/:task/agent/revoke` revokes that agent and its task. Owner authority
+and task-agent authority are stored in explicit identity/credential records.
+
+All routes are also reachable under `/api`, used by the Vite dashboard proxy.
+Authenticated `GET /capabilities` reports configuration booleans only, never
+secret values. `POST /tasks/:task/research` accepts
+`{"topic":"Safe spending on Solana","mode":"fixture"}` and starts the durable
+four-step reference workflow. Live mode requires explicit operator enablement
+and unfinished vault/service provisioning; it is not a verified release flow.
+
+Policies now include an `asset` object (`kind`, `network`, `mint`, `symbol`,
+`decimals`) and `maxOutputTokens`. Omitted fields default to fixture units and
+512 output tokens. Asset identity cannot be changed by policy replacement.
+Policies attached to an on-chain vault cannot be edited in place; create a new
+vault instead. OpenAI calls reserve zero token-payment units, consume the call
+quota, and are bounded by the configured output-token maximum. Their provider
+billing is separate and is not a confirmed dollar amount in the usage ledger.
+
+Snapshots now include `research` runs and an optional `vault` binding. Revoked
+gateway authority and confirmed on-chain revocation are distinct fields.

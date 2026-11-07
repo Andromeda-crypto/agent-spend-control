@@ -1,9 +1,15 @@
 import pg from 'pg';
-import { FixtureAdapter } from '../../../packages/adapters/fixture.js';
-import { runWorkerOnce } from './worker.js';
-
-if (process.env.ENABLE_FIXTURE_ADAPTER !== 'true') throw new Error('Set ENABLE_FIXTURE_ADAPTER=true to run the synthetic demo worker');
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-try {
-  console.log(JSON.stringify({ fixture: true, results: await runWorkerOnce(pool, [new FixtureAdapter(pool)]) }));
-} finally { await pool.end(); }
+import { setTimeout } from 'node:timers/promises';
+import { runtime } from './runtime.js';
+const pool=new pg.Pool({connectionString:process.env.DATABASE_URL});
+const watch=process.argv.includes('--watch');
+const shutdown=new AbortController();
+for(const signal of ['SIGINT','SIGTERM'] as const)process.once(signal,()=>shutdown.abort());
+try{
+  const tick=await runtime(pool);
+  do{
+    try{const results=await tick();if(!watch||results.length)console.log(JSON.stringify({results}));}
+    catch(error){if(!watch)throw error;console.error('Worker pass failed; retrying. Review database and adapter configuration.');}
+    if(watch&&!shutdown.signal.aborted)await setTimeout(1500,undefined,{signal:shutdown.signal}).catch(()=>{});
+  }while(watch&&!shutdown.signal.aborted);
+}finally{await pool.end();}

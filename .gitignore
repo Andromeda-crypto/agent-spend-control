@@ -4,3 +4,7 @@ node_modules/
 *.keypair.json
 coverage/
 .DS_Store
+.local/
+target/
+dist/
+*.wallet.json

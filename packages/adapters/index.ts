@@ -18,7 +18,7 @@ export interface Adapter {
   recipient: string;
   /** A trusted, reliable upper bound in the task's monetary units. */
   quote(purchase: Purchase): string;
-  execute(dispatchId: string, purchase: Purchase): Promise<Outcome>;
+  execute(dispatchId: string, purchase: Purchase, context?: { task: string; request: string }): Promise<Outcome>;
   /** Read-only lookup; never send the purchase again after an uncertain result. */
   lookup(dispatchId: string): Promise<Outcome>;
 }

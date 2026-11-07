@@ -1,6 +1,8 @@
 import { z } from 'zod';
 export const units = z.string().regex(/^(0|[1-9][0-9]{0,17})$/);
-export const Policy = z.object({ budget: units, perRequest: units, approvalAbove: units,
+export const Asset = z.object({ kind: z.enum(['fixture','spl_token']), network: z.enum(['localnet','devnet']),
+ mint: z.string().min(1), symbol: z.string().min(1).max(20), decimals: z.number().int().min(0).max(9) }).strict();
+export const Policy = z.object({ asset: Asset.default({kind:'fixture',network:'localnet',mint:'fixture',symbol:'DEMO',decimals:0}), maxOutputTokens: z.number().int().min(16).max(2048).default(512), budget: units, perRequest: units, approvalAbove: units,
  calls: z.number().int().nonnegative().max(2147483647), expiresAt: z.string().datetime(),
  providers: z.array(z.string().min(1)), tools: z.array(z.string().min(1)), recipients: z.array(z.string().min(1)) }).strict();
 export const Purchase = z.object({ provider: z.string().min(1), tool: z.string().min(1), recipient: z.string().min(1), amount: units,

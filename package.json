@@ -3,26 +3,41 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   },
   "scripts": {
     "check": "tsc --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
-    "dev": "node --import tsx apps/gateway/src/server.ts",
-    "migrate": "node --import tsx scripts/migrate.ts",
+    "dev": "node --env-file-if-exists=.env.local --import tsx apps/gateway/src/server.ts",
+    "migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate.ts",
     "test:postgres": "node --import tsx scripts/test-postgres.ts",
-    "worker:once": "node --import tsx apps/worker/src/main.ts",
-    "demo": "node --import tsx scripts/demo.ts"
+    "worker:once": "node --env-file-if-exists=.env.local --import tsx apps/worker/src/main.ts",
+    "demo": "node --import tsx scripts/demo.ts",
+    "test:solana": "node --import tsx scripts/test-solana.ts",
+    "web:dev": "vite --config apps/web/vite.config.ts apps/web",
+    "web:build": "vite build --config apps/web/vite.config.ts apps/web",
+    "reference:serve": "node --env-file-if-exists=.env.local --import tsx apps/reference-service/src/main.ts",
+    "worker:watch": "node --env-file-if-exists=.env.local --import tsx apps/worker/src/main.ts --watch",
+    "owner:once": "node --env-file-if-exists=.env.local --import tsx apps/owner/src/main.ts",
+    "vault:build": "node --import tsx scripts/build-solana.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "4.0.110",
+    "@solana-program/system": "0.16.0",
+    "@solana-program/token": "0.18.0",
+    "@solana/kit": "8.6.0",
+    "ai": "7.0.164",
     "pg": "8.16.3",
     "zod": "4.6.7"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.3.14",
+    "@types/jsdom": "30.0.0",
     "@types/node": "24.10.0",
     "@types/pg": "8.15.6",
+    "jsdom": "31.0.0",
     "tsx": "4.20.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "8.3.6"
   }
 }

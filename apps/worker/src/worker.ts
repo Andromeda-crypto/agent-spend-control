@@ -8,12 +8,13 @@ type Candidate = { id: string; task_id: string; state: string; payload: Purchase
 /** One bounded pass. Calling again after restart reconciles dispatched work without executing it again. */
 export async function runWorkerOnce(pool: pg.Pool, adapters: Adapter[]) {
   const batches = await Promise.all(['reserved', 'dispatched'].map(state => pool.query<Candidate>(`SELECT id,task_id,state,payload,dispatch_id,adapter_version
-    FROM requests WHERE state=$1 ORDER BY created_at,id LIMIT 100`, [state])));
+    FROM requests WHERE state=$1 ORDER BY last_checked_at,id LIMIT 100`, [state])));
   const candidates = batches.flatMap(batch => batch.rows);
   const results: { id: string; status: 'settled' | 'pending' | 'skipped'; reason?: string }[] = [];
   for (const r of candidates) {
     const adapter = adapters.find(a => a.provider === r.payload.provider && a.tool === r.payload.tool && a.recipient === r.payload.recipient
       && (r.state === 'reserved' || a.version === r.adapter_version));
+    await pool.query('UPDATE requests SET last_checked_at=now() WHERE id=$1', [r.id]);
     if (r.state === 'dispatched' && !adapter) {
       results.push({ id: r.id, status: 'pending', reason: 'adapter_unavailable' });
       continue;
@@ -25,7 +26,7 @@ export async function runWorkerOnce(pool: pg.Pool, adapters: Adapter[]) {
     try {
       // External execution/lookup happens after the dispatch transaction has committed.
       const outcome = r.state === 'reserved'
-        ? await adapter.execute(dispatch.dispatchId, dispatch.payload)
+        ? await adapter.execute(dispatch.dispatchId, dispatch.payload, { task: r.task_id, request: r.id })
         : await adapter.lookup(dispatch.dispatchId);
       if (outcome.status === 'pending') { results.push({ id: r.id, status: 'pending' }); continue; }
       await transaction(pool, s => s.settle(r.task_id, r.id, dispatch.dispatchId, outcome));

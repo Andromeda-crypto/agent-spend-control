@@ -1,5 +1,7 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { Policy, Purchase, allowed, canonical } from '../../../packages/policy/src/index.js';
+import { ResearchInput } from '../../../packages/sdk/src/research.js';
+import { Identity } from './identity.js';
 import { Confirmed, type Adapter } from '../../../packages/adapters/index.js';
 export interface DB { query(sql: string, params?: any[]): Promise<{ rows: any[] }> }
 export const hash = (s: string) => createHash('sha256').update(s).digest('hex');
@@ -11,11 +13,21 @@ export class Store {
 
   async create(owner: string, raw: unknown) {
     const policy = Policy.parse(raw), agent = credential(), task = randomUUID();
-    const workspace = (await this.db.query(`INSERT INTO workspaces(id,owner_hash) VALUES ($1,$2)
-      ON CONFLICT(owner_hash) DO UPDATE SET owner_hash=EXCLUDED.owner_hash RETURNING id`,
-      [randomUUID(), hash(owner)])).rows[0].id;
+    const { workspace } = await new Identity(this.db).owner(owner, true);
     await this.db.query('INSERT INTO tasks(id,workspace_id,agent_hash,policy) VALUES ($1,$2,$3,$4)', [task, workspace, hash(agent), policy]);
+    await new Identity(this.db).registerAgent(workspace, task, agent);
     return { task, agent };
+  }
+
+
+  async identity(token: string) { return new Identity(this.db).overview(token); }
+  async registerOwner(raw: unknown) { return new Identity(this.db).register(raw); }
+  async rotateOwner(token: string) { return new Identity(this.db).rotateOwner(token); }
+  async rotateAgent(task: string, token: string, revoke = false) {
+    const t = await this.task(task, token, true);
+    const result = await new Identity(this.db).rotateAgent(t.workspace_id, task, revoke);
+    if (revoke) await this.control(task, token, 'revoke');
+    return result;
   }
 
   private async lockedTask(id: string) {
@@ -27,7 +39,7 @@ export class Store {
 
   async task(id: string, token: string, owner = false) {
     const t = await this.lockedTask(id);
-    if (hash(token) !== (owner ? t.owner_hash : t.agent_hash)) throw new Error('unauthorized');
+    await new Identity(this.db).authorize(t.workspace_id, t.id, token, owner ? 'owner' : 'agent');
     return t;
   }
 
@@ -46,7 +58,15 @@ export class Store {
   }
 
   async reserve(task: string, token: string, key: string, raw: unknown) {
-    const payload = Purchase.parse(raw), t = await this.task(task, token);
+    await this.task(task, token);
+    return this.reserveTrusted(task, key, raw);
+  }
+
+  /** Internal worker path. Never exposed as an unauthenticated HTTP submission. */
+  async reserveTrusted(task: string, key: string, raw: unknown) {
+    const payload = Purchase.parse(raw), t = await this.lockedTask(task);
+    const a = (await this.db.query('SELECT revoked FROM agents WHERE task_id=$1', [task])).rows[0];
+    if (!a || a.revoked) throw new Error('task_inactive');
     const old = (await this.db.query('SELECT * FROM requests WHERE task_id=$1 AND key=$2', [task, key])).rows[0];
     if (old) {
       if (canonical(old.payload) !== canonical(payload)) throw new Error('idempotency_conflict');
@@ -101,9 +121,11 @@ export class Store {
 
   async editPolicy(task: string, token: string, expectedVersion: number, raw: unknown) {
     const policy = Policy.parse(raw), t = await this.task(task, token, true);
+    if ((await this.db.query('SELECT task_id FROM vault_bindings WHERE task_id=$1',[task])).rows.length) throw new Error('onchain_policy_immutable');
     if (t.version !== expectedVersion) throw new Error('policy_version_conflict');
     if (BigInt(policy.budget) < BigInt(t.spent) + BigInt(t.reserved) || policy.calls < t.calls_used + t.calls_reserved)
       throw new Error('policy_below_committed_usage');
+    if (canonical(t.policy.asset ?? Policy.parse(t.policy).asset) !== canonical(policy.asset)) throw new Error('asset_immutable');
     const pending = (await this.db.query("SELECT * FROM requests WHERE task_id=$1 AND state IN ('approval','reserved')", [task])).rows;
     for (const r of pending) await this.cancel(r, 'policy_changed');
     await this.db.query('UPDATE tasks SET policy=$2,version=version+1 WHERE id=$1', [task, policy]);
@@ -112,8 +134,10 @@ export class Store {
 
   async snapshot(task: string, token: string) {
     const t = await this.lockedTask(task);
-    if (![t.owner_hash, t.agent_hash].includes(hash(token))) throw new Error('unauthorized');
+    await new Identity(this.db).authorize(t.workspace_id, t.id, token, 'either');
     const requests = (await this.db.query('SELECT * FROM requests WHERE task_id=$1 ORDER BY created_at,id', [task])).rows;
+    const research = (await this.db.query('SELECT id,topic,mode,step,state,report FROM research_runs WHERE task_id=$1 ORDER BY created_at DESC', [task])).rows;
+    const vault = (await this.db.query('SELECT program_id,policy_address,vault_address,mint,owner_address,agent_address,cluster,revoked FROM vault_bindings WHERE task_id=$1',[task])).rows[0] ?? null;
     const usage = (await this.db.query(`SELECT request_id,charged_amount::text,calls,delivery,receipt FROM usage
       WHERE task_id=$1 ORDER BY recorded_at,request_id`, [task])).rows;
     const events = (await this.db.query(`SELECT e.request_id,e.state,e.detail,e.created_at FROM events e
@@ -122,9 +146,17 @@ export class Store {
       task, policy: Policy.parse(t.policy), policyVersion: t.version, paused: t.paused, revoked: t.revoked,
       available: (BigInt(t.policy.budget) - BigInt(t.spent) - BigInt(t.reserved)).toString(),
       spent: String(t.spent), reserved: String(t.reserved), callsLeft: t.policy.calls - t.calls_used - t.calls_reserved,
-      requests: requests.map(r => this.requestView(r)), usage,
+      research, vault, requests: requests.map(r => this.requestView(r)), usage,
       events: events.map(e => ({ ...e, created_at: new Date(e.created_at).toISOString() })),
     };
+  }
+
+  async startResearch(task: string, token: string, raw: unknown) {
+    await this.task(task, token, true);
+    const { topic, mode } = ResearchInput.parse(raw);
+    const id = randomUUID();
+    await this.db.query('INSERT INTO research_runs(id,task_id,topic,mode) VALUES($1,$2,$3,$4)',[id,task,topic,mode]);
+    return { id };
   }
 
   /** Worker-only: no HTTP route or agent authority can dispatch or settle. */
@@ -132,6 +164,8 @@ export class Store {
     const t = await this.lockedTask(task), r = await this.request(task, id);
     if (r.state !== 'reserved') return null;
     try {
+      const agent = (await this.db.query('SELECT revoked FROM agents WHERE task_id=$1', [task])).rows[0];
+      if (!agent || agent.revoked) throw new Error('task_inactive');
       if (r.version !== t.version) throw new Error('policy_version_conflict');
       allowed(Policy.parse(t.policy), r.payload, t.spent, (BigInt(t.reserved) - BigInt(r.payload.amount)).toString(),
         t.calls_used + t.calls_reserved - 1, t.paused, t.revoked);
@@ -142,12 +176,25 @@ export class Store {
       }
       if (!adapter || adapter.provider !== r.payload.provider || adapter.tool !== r.payload.tool || adapter.recipient !== r.payload.recipient)
         throw new Error('adapter_unavailable');
+      if (r.payload.provider === 'solana') {
+        const binding=(await this.db.query('SELECT mint,cluster FROM vault_bindings WHERE task_id=$1',[task])).rows[0];
+        if (!binding) return null;
+        const asset=Policy.parse(t.policy).asset;
+        if (binding.mint !== asset.mint || binding.cluster !== asset.network) throw new Error('vault_asset_mismatch');
+      }
+      if (r.payload.provider === 'solana' && BigInt(r.payload.amount) > BigInt(t.policy.approvalAbove)) {
+        const synced=(await this.db.query('SELECT request_id FROM chain_approvals WHERE request_id=$1',[r.id])).rows[0];
+        if (!synced) return null;
+      }
+      if (r.payload.provider === 'openai' && Number(r.payload.input.maxOutputTokens) > Policy.parse(t.policy).maxOutputTokens) throw new Error('hard_limit');
+      if (r.payload.provider === 'fixture' && Policy.parse(t.policy).asset.kind !== 'fixture') throw new Error('asset_mismatch');
+      if (r.payload.provider === 'solana' && Policy.parse(t.policy).asset.kind !== 'spl_token') throw new Error('asset_mismatch');
       if (adapter.quote(Purchase.parse(r.payload)) !== r.payload.amount) throw new Error('quote_mismatch');
     } catch (error) {
       await this.cancel(r, error instanceof Error ? error.message : 'dispatch_rejected');
       return null;
     }
-    const dispatchId = randomUUID();
+    const dispatchId = r.dispatch_id ?? r.id;
     await this.db.query("UPDATE requests SET state='dispatched',dispatch_id=$2,adapter_version=$3 WHERE id=$1", [id, dispatchId, adapter.version]);
     await this.event(id, 'dispatched', { dispatchId, adapterVersion: adapter.version });
     return { task, id, dispatchId, adapterVersion: adapter.version, payload: Purchase.parse(r.payload) };

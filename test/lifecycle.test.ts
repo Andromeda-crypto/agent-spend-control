@@ -112,3 +112,28 @@ test('dispatch binds owner approval to the exact payload hash', async () => {
     assert.equal(snapshot.reserved, '0'); assert.equal(snapshot.events.at(-1)?.detail.reason, 'approval_required');
   } finally { await db.close(); }
 });
+
+test('owner and agent rotation invalidate old credentials without crossing workspace boundaries', async () => {
+  const { db, store, owner, task, agent } = await setup();
+  try {
+    const other = await store.create('other-owner', policy);
+    await assert.rejects(store.snapshot(task, other.agent), /unauthorized/);
+    await assert.rejects(store.snapshot(task, 'other-owner'), /unauthorized/);
+    await assert.rejects(store.editPolicy(task, 'other-owner', 1, policy), /unauthorized/);
+    await assert.rejects(store.rotateAgent(task, 'other-owner'), /unauthorized/);
+    await assert.rejects(store.rotateOwner(agent), /unauthorized/);
+    const rotated = await store.rotateAgent(task, owner);
+    assert.ok('credential' in rotated);
+    await assert.rejects(store.reserve(task, agent, 'old-agent', purchase()), /unauthorized/);
+    const renewed = await store.rotateOwner(owner);
+    await assert.rejects(store.snapshot(task, owner), /unauthorized/);
+    await assert.rejects(store.create(owner, policy), /unauthorized/);
+    await assert.rejects(store.rotateOwner(owner), /unauthorized/);
+    assert.equal((await store.identity(renewed.credential)).agents.length, 1);
+    await store.reserve(task, rotated.credential!, 'new-agent', purchase());
+    await store.rotateAgent(task, renewed.credential, true);
+    await assert.rejects(store.snapshot(task, rotated.credential!), /unauthorized/);
+    assert.equal((await store.snapshot(task, renewed.credential)).reserved, '0');
+    assert.equal((await db.query('SELECT * FROM identity_events')).rows.length, 3);
+  } finally { await db.close(); }
+});

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TaskCreated, RequestView, Snapshot, ActionResult, PolicyEdited } from './contracts.js';
+import { TaskCreated, RequestView, Snapshot, ActionResult, PolicyEdited, Credential, IdentityView } from './contracts.js';
 import { Policy, Purchase } from '../../policy/src/index.js';
 
 /** Node >=22 or any browser with fetch. Credentials stay with the caller. */
@@ -14,14 +14,17 @@ export class SpendingClient {
     if (!response.ok) throw new Error(typeof result.error === 'string' ? result.error : `http_${response.status}`);
     return schema.parse(result);
   }
-  createTask(policy: z.infer<typeof Policy>) { return this.request('POST', '/tasks', TaskCreated, Policy.parse(policy)); }
+  identity() { return this.request('GET', '/identity', IdentityView); }
+  rotateOwner() { return this.request('POST', '/identity/rotate', Credential, {}); }
+  rotateAgent(task: string) { return this.request('POST', `/tasks/${encodeURIComponent(task)}/agent/rotate`, Credential, {}); }
+  createTask(policy: z.input<typeof Policy>) { return this.request('POST', '/tasks', TaskCreated, Policy.parse(policy)); }
   submit(task: string, key: string, purchase: z.infer<typeof Purchase>) {
     return this.request('POST', `/tasks/${encodeURIComponent(task)}/requests`, RequestView, Purchase.parse(purchase), key);
   }
   snapshot(task: string) { return this.request('GET', `/tasks/${encodeURIComponent(task)}`, Snapshot); }
   approve(task: string, id: string) { return this.request('POST', `/tasks/${encodeURIComponent(task)}/requests/${encodeURIComponent(id)}/approve`, RequestView, {}); }
   control(task: string, action: 'pause' | 'resume' | 'revoke') { return this.request('POST', `/tasks/${encodeURIComponent(task)}/${action}`, ActionResult, {}); }
-  editPolicy(task: string, expectedVersion: number, policy: z.infer<typeof Policy>) {
+  editPolicy(task: string, expectedVersion: number, policy: z.input<typeof Policy>) {
     return this.request('PATCH', `/tasks/${encodeURIComponent(task)}/policy`, PolicyEdited, { expectedVersion, policy: Policy.parse(policy) });
   }
 }

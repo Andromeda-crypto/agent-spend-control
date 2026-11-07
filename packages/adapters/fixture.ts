@@ -10,16 +10,16 @@ const Input = z.object({ query: z.string().min(1).max(2000), simulateTimeout: z.
 export class FixtureAdapter implements Adapter {
   version = 'fixture-v1';
   provider = 'fixture';
-  tool = 'search';
+  tool: string;
   recipient = 'service';
-  constructor(private db: ReceiptStore) {}
-  quote(purchase: Purchase) { Input.parse(purchase.input); return '20'; }
+  constructor(private db: ReceiptStore, private price = '20', tool = 'search') { this.tool = tool; this.version = `fixture-v1:${tool}:${price}`; }
+  quote(purchase: Purchase) { Input.parse(purchase.input); return this.price; }
 
   async execute(dispatchId: string, purchase: Purchase): Promise<Outcome> {
     const input = Input.parse(purchase.input);
     const payloadHash = createHash('sha256').update(canonical(purchase)).digest('hex');
     const outcome: Confirmed = {
-      status: 'confirmed', chargedAmount: '20', calls: 1,
+      status: 'confirmed', chargedAmount: this.price, calls: 1,
       delivery: input.failDelivery ? 'failed' : 'delivered',
       receipt: { fixture: true, dispatchId, query: input.query,
         result: input.failDelivery ? null : 'Synthetic research result: Solana task vaults require program-enforced limits.' },

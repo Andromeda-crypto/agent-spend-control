@@ -93,3 +93,30 @@ operator tooling are still needed. Provider-specific signatures, finality,
 real usage reconciliation, production rate limiting, retention/pagination,
 credential rotation and deployment checks remain outstanding. No production
 readiness or real-provider monetary-cap claim is made.
+
+## Current checkpoint additions (2026-11-06)
+
+Migrations 003–005 add explicit owners, task agents, revocable credentials,
+identity events, provider receipts, vault bindings, chain attempts and durable
+reference research runs. Existing owner/agent hashes are backfilled into the
+new credential records. Authentication now checks active scoped credentials.
+Owner rotation is single-use under concurrency and old tokens remain revoked.
+
+The reference workflow uses trusted stored task identity and fixed step types;
+model output cannot approve purchases or modify authority. The internal
+reserveTrusted path is never exposed as a public unauthenticated submission.
+The agent worker uses only the restricted agent signer. Owner wallet loading
+is confined to the separate owner operator command. Signed chain attempts are
+persisted before submission; uncertain attempts are reconciled without creating
+another payment. Finalized receipts are required for Devnet delivery, while
+local tests use confirmed receipts.
+
+The earlier operational notes describe the previous checkpoint. Watch mode,
+oldest-checked-first polling, identity records/rotation and a fixture dashboard
+now exist. Pagination, production login, scheduler supervision, operator
+recovery tools and real-provider end-to-end verification remain outstanding.
+
+The SPA is a static Vite application, portable to static hosting. Development
+uses a same-origin /api proxy to the gateway. Production hosting and routing
+are not configured yet. DOM+HTTP tests verify its fixture workflow; visual,
+mobile and real-browser QA still need to be performed.
