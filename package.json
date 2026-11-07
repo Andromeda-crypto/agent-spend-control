@@ -19,7 +19,14 @@
     "reference:serve": "node --env-file-if-exists=.env.local --import tsx apps/reference-service/src/main.ts",
     "worker:watch": "node --env-file-if-exists=.env.local --import tsx apps/worker/src/main.ts --watch",
     "owner:once": "node --env-file-if-exists=.env.local --import tsx apps/owner/src/main.ts",
-    "vault:build": "node --import tsx scripts/build-solana.ts"
+    "vault:build": "node --import tsx scripts/build-solana.ts",
+    "test:integration": "node --import tsx scripts/test-postgres.ts --with-solana",
+    "vault:provision": "node --env-file-if-exists=.env.local --import tsx scripts/provision-vault.ts",
+    "owner:watch": "node --env-file-if-exists=.env.local --import tsx apps/owner/src/main.ts --watch",
+    "local:demo": "node --import tsx scripts/local-demo.ts",
+    "devnet:plan": "node --import tsx scripts/deploy-devnet.ts",
+    "devnet:deploy": "node --import tsx scripts/deploy-devnet.ts --deploy",
+    "devnet:demo": "node --import tsx scripts/local-demo.ts --devnet"
   },
   "dependencies": {
     "@ai-sdk/openai": "4.0.110",

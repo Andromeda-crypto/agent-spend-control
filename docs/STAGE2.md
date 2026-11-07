@@ -48,9 +48,18 @@ The legacy CLI's post-processing emits syscall/configuration warnings; the
 compiled binary nevertheless passed local runtime restriction tests. Anchor
 CLI is not installed; the program uses Anchor crates through Cargo.
 
-A request for 2 free Devnet SOL failed with the CLI's rate-limit error.
-**No Devnet deployment has occurred.** No real funds were used. Dedicated
-program/deployer keypairs were generated locally under ignored `.local/`.
-Keep them local; do not commit or paste them. Before any later deployment,
-verify program ID/keypair match, select/disclose upgrade authority, and obtain
-free Devnet funding. Actual deployment and payment explorer links remain required.
+## Verified Devnet checkpoint
+
+After the faucet rejected requests, the user supplied 2 free Devnet SOL.
+The program is deployed and finalized at
+`8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6`. Its binary and authority
+were verified against the local build; see [public deployment evidence](deployments/devnet.json).
+The full Devnet demo completed two finalized TEST-token transfers, exact owner
+approval, authenticated reference delivery and a simulated-model report.
+See [public workflow receipts](deployments/devnet-workflow.json) and
+[run instructions](LOCAL_DEMO.md). No billable OpenAI call or real SOL was used.
+Private program/deployer/buffer keypairs remain in ignored `.local/`.
+
+Public RPC throttling required sequential, resumable buffer writes with backoff.
+The uploader verifies every byte before finalizing and retains buffer identity
+on retry. No x402 compatibility or production readiness is claimed.

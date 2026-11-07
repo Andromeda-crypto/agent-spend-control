@@ -3,15 +3,20 @@ import type pg from 'pg';
 import { z } from 'zod';
 import { transaction } from './database.js';
 import { TaskCreated, RequestView, Snapshot, ActionResult, PolicyEdited } from '../../../packages/sdk/src/contracts.js';
+import { bindVault } from './vault.js';
+import type { VaultConfiguration } from '../../../packages/solana/binding.js';
 import { Policy } from '../../../packages/policy/src/index.js';
 
 const failures: Record<string, number> = {
+  research_mode_mismatch:409, research_already_running:409, vault_not_configured:409, vault_asset_mismatch:409, vault_task_mismatch:409,
+  invalid_binding_signature:403, vault_identity_mismatch:409, vault_policy_mismatch:409, invalid_token_account:409, vault_funding_or_token_mismatch:409,
+  task_already_used:409, binding_conflict:409, cluster_identity_mismatch:409,
   onchain_policy_immutable: 409, live_execution_disabled: 409, asset_immutable: 409, unauthorized: 403, not_found: 404, body_too_large: 413,
   idempotency_conflict: 409, task_inactive: 409, not_allowed: 409, hard_limit: 409,
   invalid_state: 409, policy_version_conflict: 409, policy_below_committed_usage: 409,
 };
 const Edit = z.object({ expectedVersion: z.number().int().positive(), policy: Policy }).strict();
-export function createGateway(pool: pg.Pool) {
+export function createGateway(pool: pg.Pool, options:{vault?:VaultConfiguration;localModel?:boolean;devnetDemoModel?:boolean}={}) {
   return createServer(async (req, res) => {
     if (req.url?.startsWith('/api/')) req.url = req.url.slice(4);
     res.setHeader('Content-Type', 'application/json');
@@ -29,13 +34,17 @@ export function createGateway(pool: pg.Pool) {
         chunks.push(Buffer.from(chunk));
       }
       const data = Buffer.concat(chunks).toString('utf8');
-      const body = data ? JSON.parse(data) : {};
+      const body = z.record(z.string(),z.unknown()).parse(data ? JSON.parse(data) : {});
       const parts = new URL(req.url ?? '/', 'http://localhost').pathname.split('/').filter(Boolean);
       const auth = token ?? '';
+      if(req.method==='POST'&&parts[0]==='tasks'&&parts[2]==='vault'&&parts.length===3){
+        if(!options.vault)throw new Error('vault_not_configured');
+        res.end(JSON.stringify(await bindVault(pool,options.vault,parts[1],auth,body)));return;
+      }
       const result = await transaction(pool, async store => {
         if (req.method === 'GET' && req.url === '/capabilities') {
           await store.identity(auth);
-          return { fixtureEnabled:process.env.ENABLE_FIXTURE_ADAPTER==='true',openaiConfigured:!!process.env.OPENAI_API_KEY,liveEnabled:process.env.ENABLE_LIVE_EXECUTION==='true' };
+          return { fixtureEnabled:process.env.ENABLE_FIXTURE_ADAPTER==='true',openaiConfigured:!!process.env.OPENAI_API_KEY,liveEnabled:process.env.ENABLE_LIVE_EXECUTION==='true',localModelEnabled:!!options.localModel,simulatedModelEnabled:!!(options.localModel||options.devnetDemoModel),vaultConfiguration:options.vault?{program:options.vault.client.program,cluster:options.vault.cluster,agent:options.vault.agent,mint:options.vault.mint,recipientWallet:options.vault.recipientWallet}:null };
         }
         if (registration) return store.registerOwner(body);
         if (req.method === 'GET' && req.url === '/identity') return store.identity(auth);
@@ -52,12 +61,15 @@ export function createGateway(pool: pg.Pool) {
           return PolicyEdited.parse(await store.editPolicy(parts[1], auth, edit.expectedVersion, edit.policy));
         }
         if (req.method === 'POST' && parts[2] === 'research' && parts.length === 3) {
+          if(body.mode==='devnet-demo'&&(!options.devnetDemoModel||options.vault?.cluster!=='devnet'))throw new Error('live_execution_disabled');
+          if (body.mode === 'local' && (!options.localModel||options.vault?.cluster!=='localnet'))throw new Error('live_execution_disabled');
           if (body.mode === 'live' && process.env.ENABLE_LIVE_EXECUTION !== 'true') throw new Error('live_execution_disabled');
           return store.startResearch(parts[1], auth, body);
         }
         if (req.method !== 'POST') throw new Error('not_found');
         if (parts[2] === 'requests' && parts.length === 3) {
-          if (body.provider !== 'fixture' && process.env.ENABLE_LIVE_EXECUTION !== 'true') throw new Error('live_execution_disabled');
+          const localAllowed=body.provider==='solana'&&(options.vault?.cluster==='localnet'||options.vault?.cluster==='devnet'&&options.devnetDemoModel)||body.provider==='local-model'&&(options.localModel||options.devnetDemoModel);
+          if (!localAllowed && body.provider !== 'fixture' && process.env.ENABLE_LIVE_EXECUTION !== 'true') throw new Error('live_execution_disabled');
           const key = z.string().min(1).max(200).parse(req.headers['idempotency-key']);
           return RequestView.parse(await store.reserve(parts[1], auth, key, body));
         }

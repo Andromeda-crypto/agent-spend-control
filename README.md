@@ -5,9 +5,25 @@ inspect itemized usage. Current checkpoint: working fixture dashboard and durabl
 research workflow, explicit identities and credential rotation, and a Solana
 vault verified with actual local-validator transactions.
 
-**Live integration is unfinished.** There is no Devnet deployment or verified
-end-to-end OpenAI + paid-service run yet. See [STATUS.md](docs/STATUS.md) for the
-resume checklist. No billable OpenAI calls are authorized at this checkpoint.
+The complete local payment/service/dashboard path is verified. Model responses
+can be simulated without an API key. Actual OpenAI calls remain disabled by
+user instruction. See [STATUS.md](docs/STATUS.md) for current Devnet deployment
+and remaining release work.
+
+## One-command full local demo
+
+```sh
+npm ci
+npm run vault:build
+PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run local:demo
+```
+
+Open the printed dashboard URL (normally **http://127.0.0.1:5174**). Sign in with the private owner token in
+`.local/local-demo-v2/access.json`, run the funded task, and approve its premium
+purchase. The launcher starts all services and uses actual local-validator
+token transfers with a clearly simulated model. Ctrl+C stops its processes and
+retains data. See [the complete demo guide](docs/LOCAL_DEMO.md) for Devnet mode,
+process boundaries and reproducible smoke checks.
 
 ## Checks and fixture terminal demo
 
@@ -51,13 +67,14 @@ pause/resume/revoke, structured policy edits and credential rotation.
 
 Owner-key sign-in is a developer bootstrap, not email/SSO authentication. Owner
 keys are retained in browser session storage; agent keys are shown once. Do not
-put owner keys in agent context. New dashboard tasks are fixture-only; live
-vault provisioning/onboarding remains unfinished.
+put owner keys in agent context. New dashboard-created tasks are fixture-only. The full demo launchers create
+and securely bind their funded test-cluster task for the dashboard; custom
+wallet onboarding is still future work.
 
 `npm run worker:once` executes a single bounded pass. Watch mode repeats passes
 serially. The agent worker never loads the owner wallet. The separate
 `npm run owner:once` command synchronizes owner-authorized on-chain exceptions
-and revocations only when live execution is explicitly enabled and configured.
+and revocations when the relevant test-cluster demo or live execution is explicitly configured.
 This separation is an application boundary, not an OS sandbox for wallet files.
 
 ## Real PostgreSQL tests
@@ -79,6 +96,15 @@ TEST_DATABASE_URL=postgres://spend:local-only@localhost:5432/spend_test \
   node --import tsx --test 'test/postgres/*.test.ts'
 ```
 
+## Combined payment, service and dashboard verification
+
+```sh
+PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run test:integration
+```
+
+This starts isolated PostgreSQL and Solana processes and tests the complete
+payment path plus program restrictions. OpenAI is never called.
+
 ## Local Solana vault
 
 Requires Rust and Solana CLI. This checkpoint used Anchor crates 0.32.1, Solana
@@ -96,8 +122,8 @@ The build helper downloads pinned SBF tools if absent. Local tests start an
 isolated validator, load the compiled program, exercise actual test-token
 transfers and restrictions, then remove the temporary ledger.
 
-The local genesis-loaded program has upgrades disabled. No Devnet upgrade
-authority exists yet because deployment has not succeeded. Devnet deployment
+The local genesis-loaded program has upgrades disabled. See docs/deployments/devnet.json when present for the independently verified
+Devnet deployment and its disclosed upgrade authority. Devnet deployment
 must use the matching local program keypair, disclose its chosen upgrade
 authority, and record explorer links. Keypairs, ledgers, build output and env
 files are ignored by Git.

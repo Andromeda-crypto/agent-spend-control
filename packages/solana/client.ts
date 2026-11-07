@@ -2,11 +2,13 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import {
   address, AccountRole, appendTransactionMessageInstructions, createTransactionMessage,
-  createSolanaRpc, devnet, createKeyPairSignerFromBytes, getAddressEncoder, getAddressDecoder, getProgramDerivedAddress,
+  createDefaultRpcTransport, createSolanaRpcFromTransport, devnet, createKeyPairSignerFromBytes, getAddressEncoder, getAddressDecoder, getProgramDerivedAddress,
   getBase64EncodedWireTransaction, getSignatureFromTransaction, pipe,
   setTransactionMessageFeePayerSigner, setTransactionMessageLifetimeUsingBlockhash,
   signTransactionMessageWithSigners, type Address, type Instruction, type KeyPairSigner,
 } from '@solana/kit';
+import { pacedTransport } from './rpc-pacing.js';
+import { assertClusterIdentity } from './cluster.js';
 import { TOKEN_PROGRAM_ADDRESS } from '@solana-program/token';
 
 export const SYSTEM = address('11111111111111111111111111111111');
@@ -27,7 +29,13 @@ export class VaultClient {
   constructor(readonly url: string, readonly program: Address) {
     const host = new URL(url).hostname;
     if (!['localhost','127.0.0.1','api.devnet.solana.com'].includes(host)) throw new Error('only_localnet_or_devnet_allowed');
-    this.rpc = createSolanaRpc(devnet(url));
+    const transport=createDefaultRpcTransport({url:devnet(url)});
+    this.rpc = createSolanaRpcFromTransport(host==='api.devnet.solana.com'?pacedTransport(transport,url):transport);
+  }
+  async assertCluster(cluster: 'localnet' | 'devnet') {
+    const genesis=await this.rpc.getGenesisHash().send();
+    assertClusterIdentity(cluster,genesis,new URL(this.url).hostname);
+    return genesis;
   }
   async pda(...seeds: Uint8Array[]) { return (await getProgramDerivedAddress({ programAddress: this.program, seeds }))[0]; }
   instruction(name: string, accounts: NonNullable<Instruction['accounts']>, ...data: Uint8Array[]): Instruction {
@@ -38,11 +46,13 @@ export class VaultClient {
     const message = pipe(createTransactionMessage({ version: 0 }), m => setTransactionMessageFeePayerSigner(payer, m),
       m => setTransactionMessageLifetimeUsingBlockhash(latest, m), m => appendTransactionMessageInstructions(instructions, m));
     const tx = await signTransactionMessageWithSigners(message);
-    return { signature: getSignatureFromTransaction(tx), wire: getBase64EncodedWireTransaction(tx) };
+    return { signature: getSignatureFromTransaction(tx), wire: getBase64EncodedWireTransaction(tx), lastValidBlockHeight: latest.lastValidBlockHeight.toString() };
   }
   async send(payer: KeyPairSigner, instructions: Instruction[]) {
     const prepared = await this.prepare(payer, instructions);
-    const accepted = await this.rpc.sendTransaction(prepared.wire, { encoding: 'base64', maxRetries: 10n }).send();
+    let accepted;
+    try{accepted=await this.rpc.sendTransaction(prepared.wire, { encoding: 'base64', preflightCommitment: 'confirmed', maxRetries: 10n }).send();}
+    catch(error){throw new Error(`Transaction submission failed for ${payer.address} (${instructions.map(i=>i.programAddress).join(',')}): ${error instanceof Error?error.message:'RPC error'}`);}
     if (accepted !== prepared.signature) throw new Error('rpc_signature_mismatch');
     for (let i = 0; i < 60; i++) {
       const { value } = await this.rpc.getSignatureStatuses([prepared.signature], { searchTransactionHistory: true }).send();
@@ -52,22 +62,36 @@ export class VaultClient {
     }
     throw new Error('transaction_pending:' + prepared.signature);
   }
-  async create(owner: KeyPairSigner, mint: Address, agent: Address, recipientWallet: Address,
+  async createInstruction(owner: KeyPairSigner, mint: Address, agent: Address, recipientWallet: Address,
     taskId: Uint8Array, total: string, perPayment: string, approvalAbove: string, expiry: bigint) {
     const policy = await this.pda(Buffer.from('task'), keyBytes(owner.address), taskId);
     const vault = await this.pda(Buffer.from('vault'), keyBytes(policy));
     const expiryBytes = Buffer.alloc(8); expiryBytes.writeBigInt64LE(expiry);
     const ix = this.instruction('create', [signing(owner), writable(policy), readonly(mint), writable(vault), readonly(TOKEN_PROGRAM_ADDRESS), readonly(SYSTEM)],
       taskId, keyBytes(agent), keyBytes(recipientWallet), u64(total), u64(perPayment), u64(approvalAbove), expiryBytes);
-    await this.send(owner, [ix]);
-    return { policy, vault };
+    return { policy, vault, instruction: ix };
+  }
+  async create(owner: KeyPairSigner, mint: Address, agent: Address, recipientWallet: Address,
+    taskId: Uint8Array, total: string, perPayment: string, approvalAbove: string, expiry: bigint) {
+    const prepared=await this.createInstruction(owner,mint,agent,recipientWallet,taskId,total,perPayment,approvalAbove,expiry);
+    await this.send(owner,[prepared.instruction]);
+    return {policy:prepared.policy,vault:prepared.vault};
+  }
+  depositInstruction(owner: KeyPairSigner, b: Binding, source: Address, amount: string) {
+    return this.instruction('deposit', [signing(owner), readonly(b.policy), readonly(b.mint), writable(source), writable(b.vault), readonly(TOKEN_PROGRAM_ADDRESS)], u64(amount));
   }
   deposit(owner: KeyPairSigner, b: Binding, source: Address, amount: string) {
-    return this.send(owner, [this.instruction('deposit', [signing(owner), readonly(b.policy), readonly(b.mint), writable(source), writable(b.vault), readonly(TOKEN_PROGRAM_ADDRESS)], u64(amount))]);
+    return this.send(owner, [this.depositInstruction(owner,b,source,amount)]);
   }
   async exception(owner: KeyPairSigner, b: Binding, purchaseId: Uint8Array, amount: string, scope: Uint8Array) {
     const exception = await this.pda(Buffer.from('exception'), keyBytes(b.policy), purchaseId);
     const existing = await this.rpc.getAccountInfo(exception, { encoding: 'base64', commitment: 'confirmed' }).send();
+    if(existing.value){
+      const d=Buffer.from(existing.value.data[0],'base64');
+      if(existing.value.owner!==this.program||d.length!==116||!d.subarray(0,8).equals(bytes32('account:ScopedException').subarray(0,8))
+        ||!d.subarray(8,40).equals(keyBytes(b.policy))||!d.subarray(40,72).equals(purchaseId)||d.readBigUInt64LE(72)!==BigInt(amount)
+        ||!d.subarray(80,112).equals(scope)||d.readUInt32LE(112)!==b.version)throw new Error('exception_conflict');
+    }
     if (!existing.value) await this.send(owner, [this.instruction('grant_exception', [signing(owner), readonly(b.policy), writable(exception), readonly(SYSTEM)], purchaseId, u64(amount), scope, u32(b.version))]);
     return exception;
   }
@@ -86,7 +110,7 @@ export class VaultClient {
     const d = Buffer.from(value.data[0], 'base64');
     if (d.length !== 214 || !d.subarray(0,8).equals(bytes32('account:TaskPolicy').subarray(0,8))) throw new Error('invalid_policy_data');
     const key = (offset:number) => getAddressDecoder().decode(d.subarray(offset,offset+32));
-    return { owner:key(8),agent:key(40),recipient:key(72),mint:key(104), total:d.readBigUInt64LE(168),
+    return { taskId:d.subarray(136,168).toString('hex'),owner:key(8),agent:key(40),recipient:key(72),mint:key(104), total:d.readBigUInt64LE(168),
       perPayment:d.readBigUInt64LE(176),approvalAbove:d.readBigUInt64LE(184),expiresAt:d.readBigInt64LE(192),
       spent:d.readBigUInt64LE(200),version:d.readUInt32LE(208),revoked:!!d[212] };
   }
@@ -98,6 +122,6 @@ export class VaultClient {
     const data = Buffer.from(value.data[0], 'base64');
     if (data.length !== 116 || !data.subarray(0,8).equals(bytes32('account:PurchaseReceipt').subarray(0,8))
       || !data.subarray(8,40).equals(keyBytes(b.policy)) || !data.subarray(40,72).equals(purchaseId)) throw new Error('invalid_chain_receipt');
-    return { address: receipt, amount: data.readBigUInt64LE(72).toString(), scope: data.subarray(80,112).toString('hex'), version: data.readUInt32LE(112) };
+    return { address: receipt, rentLamports:value.lamports.toString(), amount: data.readBigUInt64LE(72).toString(), scope: data.subarray(80,112).toString('hex'), version: data.readUInt32LE(112) };
   }
 }

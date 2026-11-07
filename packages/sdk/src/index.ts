@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TaskCreated, RequestView, Snapshot, ActionResult, PolicyEdited, Credential, IdentityView } from './contracts.js';
+import { ResearchInput } from './research.js';
 import { Policy, Purchase } from '../../policy/src/index.js';
 
 /** Node >=22 or any browser with fetch. Credentials stay with the caller. */
@@ -13,6 +14,12 @@ export class SpendingClient {
     const result = await response.json();
     if (!response.ok) throw new Error(typeof result.error === 'string' ? result.error : `http_${response.status}`);
     return schema.parse(result);
+  }
+  startResearch(task:string,topic:string,mode:z.input<typeof ResearchInput>['mode']) {
+    return this.request('POST', `/tasks/${encodeURIComponent(task)}/research`, z.object({id:z.string()}).strict(), ResearchInput.parse({topic,mode}));
+  }
+  bindVault(task:string,proof:{policy:string;owner:string;recipientAccount:string;signature:string}) {
+    return this.request('POST', `/tasks/${encodeURIComponent(task)}/vault`, z.object({task:z.string(),policy:z.string(),vault:z.string()}).strict(), proof);
   }
   identity() { return this.request('GET', '/identity', IdentityView); }
   rotateOwner() { return this.request('POST', '/identity/rotate', Credential, {}); }

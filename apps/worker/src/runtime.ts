@@ -1,6 +1,7 @@
 import type pg from 'pg';
 import { address } from '@solana/kit';
 import { FixtureAdapter } from '../../../packages/adapters/fixture.js';
+import { LocalModelAdapter } from '../../../packages/adapters/local-model.js';
 import { OpenAIAdapter } from '../../../packages/adapters/openai.js';
 import { SolanaAdapter } from '../../../packages/adapters/solana.js';
 import type { Adapter } from '../../../packages/adapters/index.js';
@@ -10,9 +11,11 @@ import { runWorkerOnce } from './worker.js';
 export async function runtime(pool:pg.Pool){
   const adapters:Adapter[]=[];
   if(process.env.ENABLE_FIXTURE_ADAPTER==='true')adapters.push(new FixtureAdapter(pool),new FixtureAdapter(pool,'40','dataset'));
+  const local=process.env.ENABLE_LOCALNET_MODEL==='true'&&process.env.SOLANA_CLUSTER==='localnet'||process.env.ENABLE_DEVNET_DEMO_MODEL==='true'&&process.env.SOLANA_CLUSTER==='devnet';
+  if(local)adapters.push(new LocalModelAdapter(pool));
   const live=process.env.ENABLE_LIVE_EXECUTION==='true';
   if(live&&process.env.OPENAI_API_KEY&&process.env.OPENAI_MODEL)adapters.push(new OpenAIAdapter(pool,process.env.OPENAI_MODEL,process.env.OPENAI_API_KEY));
-  if(live&&process.env.SOLANA_RPC_URL&&process.env.SOLANA_PROGRAM_ID&&process.env.AGENT_WALLET_PATH&&process.env.REFERENCE_SERVICE_URL){
+  if((live||local)&&process.env.SOLANA_RPC_URL&&process.env.SOLANA_PROGRAM_ID&&process.env.AGENT_WALLET_PATH&&process.env.REFERENCE_SERVICE_URL){
     const client=new VaultClient(process.env.SOLANA_RPC_URL,address(process.env.SOLANA_PROGRAM_ID));
     adapters.push(new SolanaAdapter(pool,client,await loadSigner(process.env.AGENT_WALLET_PATH),process.env.REFERENCE_SERVICE_URL));
   }

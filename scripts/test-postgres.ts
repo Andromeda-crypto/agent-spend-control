@@ -20,7 +20,8 @@ try {
   const pool = new pg.Pool({ connectionString: url });
   console.log((await pool.query('SELECT version()')).rows[0].version);
   await pool.end();
-  const child = spawn(process.execPath, ['--import', 'tsx', '--test', 'test/postgres/*.test.ts'], {
+  const args=process.argv.includes('--with-solana')?['--import','tsx','scripts/test-solana.ts','--fullstack']:['--import','tsx','--test','test/postgres/*.test.ts'];
+  const child = spawn(process.execPath, args, {
     stdio: 'inherit', env: { ...process.env, TEST_DATABASE_URL: url },
   });
   const [code] = await once(child, 'exit');

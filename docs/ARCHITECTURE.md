@@ -120,3 +120,38 @@ The SPA is a static Vite application, portable to static hosting. Development
 uses a same-origin /api proxy to the gateway. Production hosting and routing
 are not configured yet. DOM+HTTP tests verify its fixture workflow; visual,
 mobile and real-browser QA still need to be performed.
+
+## Provisioning and test-cluster integration
+
+Migration 006 adds persisted atomic provisioning plans and local research mode;
+007 adds explicitly labeled Devnet-demo mode. A workspace owner token plus a
+wallet signature authorizes a binding. The expected policy PDA includes the
+hashed task ID and owner. The gateway independently verifies cluster genesis,
+program-owned policy, exact limits/version/expiry, supported mint, recipient,
+restricted agent, PDA token authority, decimals and funded balance. No network
+calls occur inside the task-lock transaction. A second authorization/version
+check closes the gap between chain inspection and database commit.
+
+Vault creation and deposit share one Solana transaction. The application persists
+that signed transaction before sending; retries reuse it, so neither an uncertain
+response nor a crash can trigger a second deposit. A failed/expired provisioning
+attempt is retained for operator review. Policy changes are forbidden once a
+provisioning plan or vault binding exists. Existing verified bindings are immutable
+and can be retrieved idempotently after spending.
+
+The combined integration runner provisions temporary PostgreSQL and a validator,
+then exercises the actual HTTP dashboard, program, paid service, ledger and owner
+signer. It covers forged/cross-tenant bindings, unpaid/copied service proofs,
+ambiguous submission, exact approval synchronization, charged-but-failed delivery,
+repeated provisioning, finalized-state observation and revoked dispatch recovery.
+The simulated model is explicitly labeled and never calls OpenAI.
+
+The full-cluster check compares complete genesis hashes, not 32-character CAIP-2
+references. The known values were checked against the official SDK and Devnet CLI:
+https://github.com/solana-labs/solana/blob/master/sdk/src/genesis_config.rs
+
+`local:demo` and `devnet:demo` are development supervisors, not production hosting.
+They launch separate agent and owner processes, clear OpenAI keys from child
+execution environments, persist private state in ignored directories and stop
+only the processes they own. Interactive wallet onboarding, public-user custody,
+production service supervision, restore exercises and visual browser QA remain.

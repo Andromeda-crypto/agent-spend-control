@@ -2,6 +2,7 @@ import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { Policy, Purchase, allowed, canonical } from '../../../packages/policy/src/index.js';
 import { ResearchInput } from '../../../packages/sdk/src/research.js';
 import { Identity } from './identity.js';
+import type { Binding } from '../../../packages/solana/client.js';
 import { Confirmed, type Adapter } from '../../../packages/adapters/index.js';
 export interface DB { query(sql: string, params?: any[]): Promise<{ rows: any[] }> }
 export const hash = (s: string) => createHash('sha256').update(s).digest('hex');
@@ -121,7 +122,7 @@ export class Store {
 
   async editPolicy(task: string, token: string, expectedVersion: number, raw: unknown) {
     const policy = Policy.parse(raw), t = await this.task(task, token, true);
-    if ((await this.db.query('SELECT task_id FROM vault_bindings WHERE task_id=$1',[task])).rows.length) throw new Error('onchain_policy_immutable');
+    if ((await this.db.query('SELECT task_id FROM vault_bindings WHERE task_id=$1 UNION SELECT task_id FROM vault_provisions WHERE task_id=$1',[task])).rows.length) throw new Error('onchain_policy_immutable');
     if (t.version !== expectedVersion) throw new Error('policy_version_conflict');
     if (BigInt(policy.budget) < BigInt(t.spent) + BigInt(t.reserved) || policy.calls < t.calls_used + t.calls_reserved)
       throw new Error('policy_below_committed_usage');
@@ -151,9 +152,40 @@ export class Store {
     };
   }
 
+  async saveProvision(task:string,policyHash:string,plan:unknown,signature:string,wire:string) {
+    const existing=(await this.db.query('SELECT * FROM vault_provisions WHERE task_id=$1',[task])).rows[0];
+    if(existing)return existing;
+    if((await this.db.query('SELECT id FROM requests WHERE task_id=$1 LIMIT 1',[task])).rows.length)throw new Error('task_already_used');
+    return (await this.db.query(`INSERT INTO vault_provisions(task_id,policy_hash,plan,signature,wire) VALUES($1,$2,$3,$4,$5) RETURNING *`,[task,policyHash,plan,signature,wire])).rows[0];
+  }
+
+  async bindVault(task:string,token:string,policyCanonical:string,version:number,b:Binding,cluster:string) {
+    const t=await this.task(task,token,true);
+    if(t.revoked||t.paused)throw new Error('task_inactive');
+    if(t.version!==version||canonical(Policy.parse(t.policy))!==policyCanonical)throw new Error('policy_version_conflict');
+    const previous=(await this.db.query('SELECT * FROM vault_bindings WHERE task_id=$1',[task])).rows[0];
+    if(previous){
+      if(previous.policy_address!==b.policy||previous.program_id!==b.program||previous.owner_address!==b.owner
+        ||previous.recipient_account!==b.recipient||previous.agent_address!==b.agent)throw new Error('binding_conflict');
+      return {task,policy:b.policy,vault:b.vault};
+    }
+    const used=(await this.db.query('SELECT id FROM requests WHERE task_id=$1 LIMIT 1',[task])).rows.length;
+    if(used||BigInt(t.spent)!==0n||BigInt(t.reserved)!==0n)throw new Error('task_already_used');
+    await this.db.query(`INSERT INTO vault_bindings(task_id,program_id,policy_address,vault_address,mint,recipient_account,owner_address,agent_address,chain_version,cluster)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,[task,b.program,b.policy,b.vault,b.mint,b.recipient,b.owner,b.agent,b.version,cluster]);
+    return {task,policy:b.policy,vault:b.vault};
+  }
+
   async startResearch(task: string, token: string, raw: unknown) {
-    await this.task(task, token, true);
+    const t=await this.task(task, token, true);
+    if(t.paused||t.revoked)throw new Error('task_inactive');
     const { topic, mode } = ResearchInput.parse(raw);
+    const asset=Policy.parse(t.policy).asset;
+    if((mode==='fixture')!==(asset.kind==='fixture'))throw new Error('research_mode_mismatch');
+    if(mode!=='fixture' && !(await this.db.query('SELECT task_id FROM vault_bindings WHERE task_id=$1',[task])).rows.length)throw new Error('vault_not_configured');
+    if((mode==='local' && asset.network!=='localnet')||(mode==='devnet-demo'&&asset.network!=='devnet'))throw new Error('research_mode_mismatch');
+    const active=(await this.db.query("SELECT id FROM research_runs WHERE task_id=$1 AND state IN ('running','awaiting_approval') LIMIT 1",[task])).rows[0];
+    if(active)throw new Error('research_already_running');
     const id = randomUUID();
     await this.db.query('INSERT INTO research_runs(id,task_id,topic,mode) VALUES($1,$2,$3,$4)',[id,task,topic,mode]);
     return { id };

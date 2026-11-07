@@ -25,7 +25,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 250));
   }
   if (!ready) throw new Error('validator_start_timeout');
-  const tests = spawn(process.execPath, ['--import', 'tsx', '--test', 'test/solana/*.test.ts'], {
+  const files=process.argv.includes('--fullstack')?['test/solana/*.test.ts','test/fullstack/*.test.ts']:['test/solana/*.test.ts'];
+  const tests = spawn(process.execPath, ['--import', 'tsx', '--test', ...files], {
     stdio: 'inherit', env: { ...process.env, SOLANA_RPC_URL: `http://127.0.0.1:${port}`, SOLANA_PROGRAM_ID: program },
   });
   const [code] = await once(tests, 'exit'); process.exitCode = typeof code === 'number' ? code : 1;

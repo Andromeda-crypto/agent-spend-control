@@ -19,7 +19,7 @@ before(async () => {
     await client.query(await readFile('migrations/001_initial.sql', 'utf8'));
     await migrate(client);
     await migrate(client);
-    assert.equal((await client.query('SELECT count(*) FROM schema_migrations')).rows[0].count, '5');
+    assert.equal((await client.query('SELECT count(*) FROM schema_migrations')).rows[0].count, '7');
     await client.query('COMMIT');
   }
   finally { client.release(); await pool.end(); }

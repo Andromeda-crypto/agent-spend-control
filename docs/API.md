@@ -128,3 +128,40 @@ billing is separate and is not a confirmed dollar amount in the usage ledger.
 
 Snapshots now include `research` runs and an optional `vault` binding. Revoked
 gateway authority and confirmed on-chain revocation are distinct fields.
+
+## Verified task-to-vault binding
+
+`POST /tasks/:task/vault` is owner-only and accepts:
+
+```json
+{"policy":"PROGRAM_POLICY_PDA","owner":"OWNER_WALLET_PUBLIC_KEY","recipientAccount":"SERVICE_TOKEN_ACCOUNT","signature":"BASE64_ED25519_SIGNATURE"}
+```
+
+The signature covers the domain-separated binding message implemented in
+`packages/solana/binding.ts`: workspace/task identity, current policy hash/version,
+program, cluster, policy/vault addresses, mint, recipient token account and agent.
+The gateway checks its trusted public configuration and the actual on-chain
+policy, PDA seeds, limits, expiry, mint decimals, account authority and funding.
+RPC inspection runs outside transactions; the final binding revalidates the owner
+and policy under the task lock. Exact retries return the binding without creating
+or funding another vault, including after legitimate spending.
+
+The operator command `npm run vault:provision -- TASK_ID` reads OWNER_TOKEN and
+OWNER_WALLET_PATH securely from the environment or ignored `.env.local`.
+It creates and deposits in one atomic chain transaction, persists its signed
+transaction before broadcast, and only rebroadcasts that same transaction on
+retry. It never puts the owner key in the SDK or model context. A signed
+provisioning plan freezes that task's policy to avoid ambiguous funding under
+changed limits. Expired/unresolved provisioning needs operator investigation;
+it is not automatically replaced with another payment.
+
+Research modes are now `fixture` (all synthetic), `local` (local-validator token
+transfers and simulated model), `devnet-demo` (actual Devnet transfers and simulated
+model), and `live` (actual OpenAI, explicitly operator-enabled). Local and Devnet
+demo modes require matching verified vault bindings. Only one active research run
+is allowed per task. The SDK exposes `startResearch` and `bindVault` helpers.
+
+Devnet receipt reconciliation requires finality and matches the actual transaction
+signature/accounts against the program receipt. Usage distinguishes token amount,
+service delivery, transaction fee lamports and receipt-account rent. Neither SOL
+fees nor provider-dollar billing are silently deducted from the token allowance.
