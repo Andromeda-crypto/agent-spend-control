@@ -187,3 +187,15 @@ Only five static/config files were uploaded again. Hosted anonymous Chrome check
 security headers, all scene routes/refresh, 1440/375/320px, exact bytes, evidence
 and guide link passed. The operational Integration workspace is still private;
 this public update does not enable an agent API or wallet/signing access.
+
+## Silver public release
+
+Latest verified silver/graphite source is
+`bcdfc291f01edf6560066f3b246a7af406fa037a`, production deployment
+`dpl_B5N29CbH8PMFkzTss5dZmBs9k2JK`. The stable public URL is unchanged.
+Anonymous hosted Chrome checks pass, including seven replay scenes/refresh,
+desktop/narrow layouts, security headers and no privileged requests. All four
+served files match the audited artifact. Only static assets and public header
+configuration were uploaded; the scrollable operator workbench stays private.
+Merge-to-main delivery is tracked in PR #1. This does not enable Git auto-deploy;
+never point Vercel at the privileged repository root or upload private runtime.

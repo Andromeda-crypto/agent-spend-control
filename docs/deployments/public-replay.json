@@ -1,14 +1,14 @@
 {
   "url": "https://agent-spend-control-replay.vercel.app",
-  "deploymentUrl": "https://agent-spend-control-replay-lvewud97o-om-anands-projects.vercel.app",
-  "deploymentId": "dpl_Ao9w3m39iS4CQ6EYkJWdEFQtVcay",
+  "deploymentUrl": "https://agent-spend-control-replay-nid5f8ja2-om-anands-projects.vercel.app",
+  "deploymentId": "dpl_B5N29CbH8PMFkzTss5dZmBs9k2JK",
   "project": "agent-spend-control-replay",
   "projectId": "prj_W4cajKyHwSpPwGc1CpszobIPTX7P",
   "teamId": "team_9YEej6OOcOp6uCXYUEMJPfBa",
   "target": "production",
   "readyState": "READY",
-  "sourceCommit": "6d3ff35c501cfeb3961bbf4f3e2cd51173517dac",
-  "verifiedAt": "2026-11-07T17:52:47.867Z",
+  "sourceCommit": "bcdfc291f01edf6560066f3b246a7af406fa037a",
+  "verifiedAt": "2026-11-07T18:32:27.624Z",
   "headers": {
     "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests",
     "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
@@ -39,15 +39,15 @@
     },
     {
       "path": "index.html",
-      "sha256": "d56e9a93ebed8f0f286a6b8fa2611d20fdedeeeae73320d45755453d81c2d6a6"
+      "sha256": "7b38fd30490d856a7785a11cfa80be3c585e7ceea15c53d8d68240c4cce9f540"
     },
     {
-      "path": "assets/index-CQckISDo.css",
-      "sha256": "f15808983a13c7fd7da8230d94329c9c0071cc6363cbf496860979cdbce6e399"
+      "path": "assets/index-CNcH5m6f.css",
+      "sha256": "1a85343e09348b420c9da84b459e844e311210d528da296c5aa286a86c4f7099"
     },
     {
-      "path": "assets/index-D9EfbYzP.js",
-      "sha256": "216f1727b0d8464e3f28f3ee85b3f1be842b236446b153caba3a1c29b9b74d3e"
+      "path": "assets/index-CogUItFW.js",
+      "sha256": "5f49e2b62a1374ff25e17a44a0f07a2c8deea329e5c93fcdae62d34c08633021"
     },
     {
       "path": "vercel.json",
@@ -102,5 +102,6 @@
     "Native mobile/Safari and screen-reader review remain"
   ],
   "developerGuide": "https://github.com/Andromeda-crypto/agent-spend-control/blob/feat/vault-agent-dashboard/docs/INTEGRATION.md",
-  "developerGuideStatus": 200
+  "developerGuideStatus": 200,
+  "theme": "silver-graphite"
 }

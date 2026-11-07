@@ -2,10 +2,15 @@
 
 ## Resume here
 
-Branch: `feat/vault-agent-dashboard`. The internal research-agent pilot is
+Delivery: [PR #1](https://github.com/Andromeda-crypto/agent-spend-control/pull/1)
+integrates `feat/vault-agent-dashboard` into `main`, including the ancestor
+`feat/durable-request-lifecycle` history. Retain those branch references; public
+guide links use the feature ref. The internal research-agent pilot is
 implemented and verified. Current increment polishes the public/private UI in
 silver and graphite, with a restructured scrollable Integration workbench.
-Public site: **https://agent-spend-control-replay.vercel.app**; deployment evidence
+Public silver release: **https://agent-spend-control-replay.vercel.app**.
+Deployed source: `bcdfc291f01edf6560066f3b246a7af406fa037a`; deployment
+`dpl_B5N29CbH8PMFkzTss5dZmBs9k2JK`. Deployment evidence
 is in [public-replay.json](deployments/public-replay.json).
 
 The public surface remains read-only; owner console/live execution remain private.
@@ -28,8 +33,10 @@ wallet/access-file resets or billable API calls are authorized or performed.
 - `npm run test:design` is a read-only Chrome check against an existing local
   stack. It covers public hero/policy, private overview/workbench/code, modal fit,
   active-section refresh and absence of credentials. No spending actions are sent.
-- TypeScript, both production builds and the public production-artifact Chrome
-  check pass. Payment/backend contracts and the existing Solana state are unchanged.
+- TypeScript, both production builds, read-only design checks and the public
+  production-artifact/anonymous hosted Chrome checks pass. Hosted files match
+  the audited static package byte-for-byte. GitHub checks pass on the visual
+  implementation commits; PR checks gate the final main integration. Payment/backend contracts and the existing Solana state are unchanged.
 
 ## Developer pilot increment — 2026-11-07
 
