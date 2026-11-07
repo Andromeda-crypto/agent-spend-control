@@ -1,0 +1,11 @@
+node_modules/
+.env*
+!.env.example
+*.keypair.json
+coverage/
+.DS_Store
+.local/
+target/
+dist/
+*.wallet.json
+deploy/operator.env

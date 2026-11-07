@@ -1,0 +1,12 @@
+.git
+.local
+.env*
+**/node_modules
+**/dist
+target
+**/*.wallet.json
+**/*.keypair.json
+coverage
+.DS_Store
+deploy/operator.env
+**/private-credential.txt

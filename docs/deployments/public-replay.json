@@ -1,0 +1,107 @@
+{
+  "url": "https://agent-spend-control-replay.vercel.app",
+  "deploymentUrl": "https://agent-spend-control-replay-nid5f8ja2-om-anands-projects.vercel.app",
+  "deploymentId": "dpl_B5N29CbH8PMFkzTss5dZmBs9k2JK",
+  "project": "agent-spend-control-replay",
+  "projectId": "prj_W4cajKyHwSpPwGc1CpszobIPTX7P",
+  "teamId": "team_9YEej6OOcOp6uCXYUEMJPfBa",
+  "target": "production",
+  "readyState": "READY",
+  "sourceCommit": "bcdfc291f01edf6560066f3b246a7af406fa037a",
+  "verifiedAt": "2026-11-07T18:32:27.624Z",
+  "headers": {
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    "referrer-policy": "no-referrer",
+    "strict-transport-security": "max-age=31536000",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY"
+  },
+  "evidenceSignatures": [
+    "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
+    "4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J"
+  ],
+  "widths": [
+    1440,
+    375,
+    320
+  ],
+  "scenes": 7,
+  "browserErrors": [],
+  "requestCount": 168,
+  "publicWithoutAuth": true,
+  "privilegedPaths404": true,
+  "staticGetOnly": true,
+  "files": [
+    {
+      "path": "evidence.json",
+      "sha256": "c31d21eb88f7f7bc05807ac80ed544c9612b3343c36ab0696689cf26712d4d58"
+    },
+    {
+      "path": "index.html",
+      "sha256": "7b38fd30490d856a7785a11cfa80be3c585e7ceea15c53d8d68240c4cce9f540"
+    },
+    {
+      "path": "assets/index-CNcH5m6f.css",
+      "sha256": "1a85343e09348b420c9da84b459e844e311210d528da296c5aa286a86c4f7099"
+    },
+    {
+      "path": "assets/index-CogUItFW.js",
+      "sha256": "5f49e2b62a1374ff25e17a44a0f07a2c8deea329e5c93fcdae62d34c08633021"
+    },
+    {
+      "path": "vercel.json",
+      "sha256": "08b527f27def7bb4b6ff9ac41dad4bf462634444141927d2954baf767be219ad"
+    }
+  ],
+  "chainVerification": {
+    "verifiedAt": "2026-11-07T17:30:05.439Z",
+    "method": "getSignatureStatuses",
+    "cluster": "devnet",
+    "signatures": [
+      {
+        "signature": "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
+        "confirmationStatus": "finalized",
+        "confirmations": null,
+        "err": null,
+        "slot": 519495339,
+        "status": {
+          "Ok": null
+        }
+      },
+      {
+        "signature": "4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J",
+        "confirmationStatus": "finalized",
+        "confirmations": null,
+        "err": null,
+        "slot": 519495367,
+        "status": {
+          "Ok": null
+        }
+      }
+    ],
+    "readOnly": true
+  },
+  "explorerChecks": [
+    {
+      "url": "https://explorer.solana.com/tx/588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9?cluster=devnet",
+      "status": 200,
+      "correctDevnetURL": true
+    },
+    {
+      "url": "https://explorer.solana.com/tx/4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J?cluster=devnet",
+      "status": 200,
+      "correctDevnetURL": true
+    }
+  ],
+  "limitations": [
+    "Recorded read-only replay, simulated model, self-operated TEST/service",
+    "Blocked/revocation scenes illustrated from local tests",
+    "No public live execution or private backend deployed",
+    "Explorer plain HTTP clients may be rate-limited",
+    "Native mobile/Safari and screen-reader review remain"
+  ],
+  "developerGuide": "https://github.com/Andromeda-crypto/agent-spend-control/blob/feat/vault-agent-dashboard/docs/INTEGRATION.md",
+  "developerGuideStatus": 200,
+  "theme": "silver-graphite"
+}

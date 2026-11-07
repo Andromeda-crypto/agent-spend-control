@@ -1,0 +1,33 @@
+name: checks
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: spend_test
+          POSTGRES_USER: spend
+          POSTGRES_PASSWORD: local-only
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U spend -d spend_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run demo
+      - run: npm run web:build
+      - run: npm run replay:build
+      - run: node --import tsx --test 'test/postgres/*.test.ts'
+        env:
+          TEST_DATABASE_URL: postgres://spend:local-only@127.0.0.1:5432/spend_test

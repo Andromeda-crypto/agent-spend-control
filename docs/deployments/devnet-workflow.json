@@ -1,0 +1,65 @@
+{
+  "cluster": "devnet",
+  "program": "8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6",
+  "mint": "M6LTfRTCZQdpu9JZ6aWxv4s5kxUsFj1zyvZxLfiS9GV",
+  "task": "9c7fccb2-87e6-4dae-b600-c5f38868f4c7",
+  "spent": "60",
+  "receipts": [
+    {
+      "data": {
+        "data": {
+          "title": "Solana spending controls",
+          "content": "A task vault can hold SPL tokens under a program-derived authority. Agent purchases must pass the program rules before a token transfer. API-provider billing remains separate from on-chain token budgets.",
+          "sources": [
+            "https://solana.com/docs/core/pda",
+            "https://solana.com/docs/tokens/basics/transfer-tokens"
+          ]
+        },
+        "topic": "Safe spending on Solana",
+        "cluster": "devnet",
+        "fixture": false,
+        "receipt": "5Dwd7CQzvmuecFCHnX5SvBCw3GWr3SvMEadsPGSeNArW",
+        "selfOperated": true
+      },
+      "mint": "M6LTfRTCZQdpu9JZ6aWxv4s5kxUsFj1zyvZxLfiS9GV",
+      "policy": "HF6uhzh3Chq7ZbEDW1tLd2fdpMApm3BtU4iSD82wp9eS",
+      "cluster": "devnet",
+      "fixture": false,
+      "explorer": "https://explorer.solana.com/tx/588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9?cluster=devnet",
+      "signature": "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
+      "feeLamports": "5000",
+      "chainReceipt": "5Dwd7CQzvmuecFCHnX5SvBCw3GWr3SvMEadsPGSeNArW",
+      "confirmation": "finalized",
+      "receiptRentLamports": "1239520",
+      "selfOperatedService": true
+    },
+    {
+      "data": {
+        "data": {
+          "title": "Designing safe agent payment recovery",
+          "content": "Use a unique purchase receipt per task and purchase ID. Update counters and transfer in one transaction. Bind owner exceptions to the exact recipient, asset, amount, policy version and service scope. A lost response is not evidence of failure; reconcile the chain receipt before considering another purchase. Payment success and service delivery are separate outcomes.",
+          "sources": [
+            "https://solana.com/docs/core/transactions",
+            "https://solana.com/docs/rpc/http/getsignaturestatuses"
+          ]
+        },
+        "topic": "Safe spending on Solana",
+        "cluster": "devnet",
+        "fixture": false,
+        "receipt": "ERLfDko9J885BMRwnooPrhD1xUK4cPk42Hrw8ccZ1Rsm",
+        "selfOperated": true
+      },
+      "mint": "M6LTfRTCZQdpu9JZ6aWxv4s5kxUsFj1zyvZxLfiS9GV",
+      "policy": "HF6uhzh3Chq7ZbEDW1tLd2fdpMApm3BtU4iSD82wp9eS",
+      "cluster": "devnet",
+      "fixture": false,
+      "explorer": "https://explorer.solana.com/tx/4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J?cluster=devnet",
+      "signature": "4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J",
+      "feeLamports": "5000",
+      "chainReceipt": "ERLfDko9J885BMRwnooPrhD1xUK4cPk42Hrw8ccZ1Rsm",
+      "confirmation": "finalized",
+      "receiptRentLamports": "1239520",
+      "selfOperatedService": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "cluster": "devnet",
+  "program": "8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6",
+  "programData": "12tK6j53HmiXdUDXYpkudFkN7o8PR1nNwnpMCwF8NVZf",
+  "upgradeAuthority": "ATJeSsM6kshKaTp4MVipQaTksNpEdAvkYkc7ofY1rU9V",
+  "binarySha256": "5960da92cf38e81436f3772a8fd4a9ad8f7a5c48470181cb226e231cd8ade9d8",
+  "explorer": "https://explorer.solana.com/address/8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6?cluster=devnet",
+  "verifiedAt": "2026-11-07T01:31:04.507Z"
+}
