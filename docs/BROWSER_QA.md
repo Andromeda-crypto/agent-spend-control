@@ -111,3 +111,11 @@ mobile nodes stack around the hub without horizontal overflow. Pending-decision
 indicators now appear only when a decision is pending; settled private receipts
 use readable delivery labels. Public labels retain recorded/illustrated states,
 self-operated TEST/service and simulated model.
+
+The full private Chrome lifecycle passed after the layout change: research, exact
+40 TEST approval, actual local 20/40 TEST transfers and delivery, report and
+confirmed revocation. Offline/reconnection, refresh and modal focus passed. The
+hosted static Orbit artifact passed anonymous HTTPS/headers, all seven phase
+deep links and refresh, 1440/375/320px, exact Devnet Explorer links, no browser
+errors and static same-origin GET-only traffic. Uploaded files match locally
+audited bytes; private API/configuration paths return 404.

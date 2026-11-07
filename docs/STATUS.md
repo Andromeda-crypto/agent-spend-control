@@ -9,9 +9,12 @@ private console uses actual selected-task balances and states; public values
 remain explicitly recorded/illustrated. Owner approvals, signing and real
 execution remain private.
 
-The preceding silver release remains documented in
-[public-replay.json](deployments/public-replay.json); the Orbit release is being
-verified before publication. Existing feature histories were merged through
+Public Orbit release: **https://agent-spend-control-replay.vercel.app**.
+Deployed source: `d0b4df3334220e6de75c82da3fd3e778f7cc400c`; deployment
+`dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Anonymous hosted verification and file
+hashes are in [public-replay.json](deployments/public-replay.json).
+[PR #2](https://github.com/Andromeda-crypto/agent-spend-control/pull/2) carries
+this increment; merge after its current-head checks pass. Existing feature histories were merged through
 [PR #1](https://github.com/Andromeda-crypto/agent-spend-control/pull/1).
 No external customer adoption is claimed.
 
@@ -39,6 +42,10 @@ Verified:
 - Full local Chrome lifecycle passes: masked sign-in/error, funded task, research,
   exact approval, actual local 20/40 TEST payments, delivery/report, confirmed
   revocation, keyboard/modal focus, offline recovery and refresh.
+- Anonymous hosted Chrome checks pass: HTTPS, security headers, direct phase
+  links/refresh, 1440/375/320px, correct Devnet Explorer links, no console errors,
+  privileged paths return 404, static GET-only traffic. Hosted files match the
+  five-file audited upload byte-for-byte.
 - Screenshots inspected. Existing backend/payment contracts are unchanged.
 
 No Devnet program upgrade, replacement buffer or Devnet transaction was made.
@@ -240,7 +247,9 @@ tested only until fresh explicit cost authorization and secure configuration.
 
 ## Next action
 
-Review the completed internal research pilot and its private Integration screen.
+Review the public Orbit layout and private Integration screen with the next
+developer. The most recent full-browser local task completed and was revoked;
+use `--new-task` for another execution.
 Use [INTEGRATION.md](INTEGRATION.md) to connect the next agent: for the same
 reference service, supply scoped URL/task/token and replace one tool call while
 persisting operation IDs. A different paid tool needs its own validated wrapper,
