@@ -29,7 +29,7 @@ one governed tool into an existing agent without replacing its framework or mode
   persisted dispatch attempts and reconciliation after uncertain responses.
 - **Independent outcomes:** confirmed charges and service delivery are recorded
   separately; a failed delivery does not erase an already-confirmed payment.
-- **Operator console:** allowances, approval inbox, request timeline, receipts,
+- **Operator console:** an interactive spending orbit, allowance inspection, approval inbox, request timeline, receipts,
   reports, pause/revoke controls and an Integration workspace.
 - **TypeScript integration:** submit a governed purchase, wait for its outcome,
   notify the owner when approval is needed, and resume the same request after a

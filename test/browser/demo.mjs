@@ -27,7 +27,7 @@ try{
  await screenshot('complete-mobile');
  await page.setViewportSize({width:1440,height:1000});await page.locator('.receipt details').first().evaluate(d=>d.open=true);await page.waitForTimeout(3000);assert.equal(await page.locator('.receipt details').first().evaluate(d=>d.open),true);await screenshot('complete-desktop');
  console.log('Browser: revocation');await page.locator('#revoke').click();await page.locator('#modal-submit').click();await visible(page.getByRole('heading',{name:'Revocation confirmed',exact:true}));assert.equal(await page.locator('#run-task').isDisabled(),true);await page.reload();await visible(page.getByRole('heading',{name:'Revocation confirmed',exact:true}));await screenshot('revoked');
- await page.locator('#demo-guide').click();await page.getByRole('link',{name:'Open the read-only replay instead'}).click();await visible(page.getByRole('heading',{name:'Let agents work. Keep spending under control.',exact:true}));
+ await page.locator('#demo-guide').click();await page.getByRole('link',{name:'Open the read-only replay instead'}).click();await visible(page.getByRole('heading',{name:'Autonomy has an orbit.',exact:true}));
  for(let i=0;i<7;i++){await page.locator(`[data-scene="${i}"]`).click();assert.equal(await page.locator('nav [aria-current]').getAttribute('data-scene'),String(i));}
  await page.reload();await visible(page.getByRole('heading',{name:'The final report',exact:true}));assert.equal(await page.getByRole('link',{name:'Verify on Devnet ↗'}).count(),2);await screenshot('replay-desktop');
  await page.setViewportSize({width:375,height:812});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await screenshot('replay-mobile');

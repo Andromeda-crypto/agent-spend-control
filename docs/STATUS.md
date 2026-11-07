@@ -2,41 +2,55 @@
 
 ## Resume here
 
-Delivery: [PR #1](https://github.com/Andromeda-crypto/agent-spend-control/pull/1)
-integrates `feat/vault-agent-dashboard` into `main`, including the ancestor
-`feat/durable-request-lifecycle` history. Retain those branch references; public
-guide links use the feature ref. The internal research-agent pilot is
-implemented and verified. Current increment polishes the public/private UI in
-silver and graphite, with a restructured scrollable Integration workbench.
-Public silver release: **https://agent-spend-control-replay.vercel.app**.
-Deployed source: `bcdfc291f01edf6560066f3b246a7af406fa037a`; deployment
-`dpl_B5N29CbH8PMFkzTss5dZmBs9k2JK`. Deployment evidence
-is in [public-replay.json](deployments/public-replay.json).
+The approved **Orbit** layout is implemented in the public replay and private
+Overview/Integration screens. A shared presentation component connects the
+allowance hub to inspectable agent, request, receipt and policy nodes. The
+private console uses actual selected-task balances and states; public values
+remain explicitly recorded/illustrated. Owner approvals, signing and real
+execution remain private.
 
-The public surface remains read-only; owner console/live execution remain private.
-No external customer adoption is claimed. No Devnet program/buffer changes,
-wallet/access-file resets or billable API calls are authorized or performed.
+Public Orbit release: **https://agent-spend-control-replay.vercel.app**.
+Deployed source: `d0b4df3334220e6de75c82da3fd3e778f7cc400c`; deployment
+`dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Anonymous hosted verification and file
+hashes are in [public-replay.json](deployments/public-replay.json).
+[PR #2](https://github.com/Andromeda-crypto/agent-spend-control/pull/2) carries
+this increment. GitHub records its current check and merge status. Existing feature histories were merged through
+[PR #1](https://github.com/Andromeda-crypto/agent-spend-control/pull/1).
+No external customer adoption is claimed.
 
-## Silver interface increment — 2026-11-07
+## Orbit interface increment — 2026-11-07
 
-- Public: split editorial hero with illustrated policy schematic; anchored product
-  navigation, sticky header/scene navigation, clear replay/developer/evidence
-  sections, reflective silver surfaces and graphite actions.
-- Private: task context bar, anchored setup sections, matte code editor panel,
-  separately scrollable sticky policy/receipt inspector and a responsive stacked
-  mobile layout. Tab choice survives refresh; inspector scroll survives updates.
-- Silver/graphite typography, borders, focus rings, subtle highlights and stronger
-  supporting-text contrast. Outcome colors stay semantic; engineering signatures,
-  policy/binding checks and network costs remain inspectable.
-- Reworked modal/backdrop material, keyboard focus return and explicit mobile
-  width bounds. Screenshots reviewed at desktop and narrow widths.
-- `npm run test:design` is a read-only Chrome check against an existing local
-  stack. It covers public hero/policy, private overview/workbench/code, modal fit,
-  active-section refresh and absence of credentials. No spending actions are sent.
-- TypeScript, both production builds, read-only design checks and the public
-  production-artifact/anonymous hosted Chrome checks pass. Hosted files match
-  the audited static package byte-for-byte. GitHub checks pass on the visual
-  implementation commits; PR checks gate the final main integration. Payment/backend contracts and the existing Solana state are unchanged.
+Implemented:
+- Reflective allowance hub, spatial agent/purchase/receipt nodes, matte contextual
+  decision bar and keyboard-operable Decisions/Receipts/Policy dock.
+- Expandable exact request, usage and policy details; payment and delivery remain
+  independent. Private inspection links lead to existing approval/receipt/setup
+  controls. The research action remains connected to the real private workflow.
+- Compact horizontal operator navigation, scrollable sections and stacked mobile
+  composition. Removed the generic public hero/KPI-card arrangement.
+- Shared `packages/ui/src/orbit.ts` and `orbit.css`; private data projection in
+  `apps/web/src/orbit-model.ts`. No privileged code enters the replay bundle.
+- Public integration documentation points to `main`; seven phase deep links,
+  recorded Devnet evidence, TEST/service and simulated-model labels remain.
+
+Verified:
+- TypeScript, both production builds and 14 existing Node tests pass.
+- Chrome static replay: restrictive CSP, seven phases, loading/error, keyboard
+  focus, refresh and widths 1440/375/320; static GET requests only.
+- Read-only Chrome design checks: public nodes/inspection/dock, private overview
+  and Integration, modal fit/focus return, desktop/mobile, no credential rendering.
+- Full local Chrome lifecycle passes: masked sign-in/error, funded task, research,
+  exact approval, actual local 20/40 TEST payments, delivery/report, confirmed
+  revocation, keyboard/modal focus, offline recovery and refresh.
+- Anonymous hosted Chrome checks pass: HTTPS, security headers, direct phase
+  links/refresh, 1440/375/320px, correct Devnet Explorer links, no console errors,
+  privileged paths return 404, static GET-only traffic. Hosted files match the
+  five-file audited upload byte-for-byte.
+- Screenshots inspected. Existing backend/payment contracts are unchanged.
+
+No Devnet program upgrade, replacement buffer or Devnet transaction was made.
+Billable OpenAI calls remain unauthorized. Local verification uses preserved
+PostgreSQL/validator state and a fresh bounded local TEST task.
 
 ## Developer pilot increment — 2026-11-07
 
@@ -233,7 +247,9 @@ tested only until fresh explicit cost authorization and secure configuration.
 
 ## Next action
 
-Review the completed internal research pilot and its private Integration screen.
+Review the public Orbit layout and private Integration screen with the next
+developer. The most recent full-browser local task completed and was revoked;
+use `--new-task` for another execution.
 Use [INTEGRATION.md](INTEGRATION.md) to connect the next agent: for the same
 reference service, supply scoped URL/task/token and replace one tool call while
 persisting operation IDs. A different paid tool needs its own validated wrapper,
