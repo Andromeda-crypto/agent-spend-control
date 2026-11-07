@@ -1,11 +1,12 @@
 # Integrating one existing agent
 
-The first adoption milestone is one developer integrating one governed paid tool
+The first internal pilot is the existing research agent in this repository.
+The next adoption milestone is one developer integrating a governed paid tool
 into an agent they already run. Keep their framework, model and other tools.
 Do not build public self-service onboarding before validating this integration.
 The public replay explains the product; it is not an API endpoint.
 
-## Responsibility split
+## External-agent responsibility split
 
 | Operator | Existing agent process |
 |---|---|
@@ -99,3 +100,79 @@ requests in Integration, approves premium through the browser and checks both
 deliveries and a no-second-payment retry. It uses installed Chrome and stores
 credential-free screenshots in ignored `.local/qa`. Tests use only local test
 tokens. A real outside developer adoption pilot is still the next step.
+
+## First internal pilot: existing research agent
+
+The selected agent is `advanceResearch` in
+`examples/reference-agent/workflow.ts`, invoked by `apps/worker/src/runtime.ts`.
+For `local` / `devnet-demo` research, both the basic and premium service steps now
+call `submitReference` from `packages/sdk/src/reference-tool.ts`. The premium
+request remains `solana / reference / reference-service`, amount `40`, with the
+same `{dataset: 'premium', topic}` input. Its key remains
+`research:<run-id>:2`, so existing retries, exact approvals, chain scope and the
+report's `research:<run-id>:%` evidence query keep their original identities.
+Fixture research remains explicitly synthetic and does not call the TEST service.
+
+This agent already runs inside trusted worker infrastructure with a transaction-
+bound store. Its submission port delegates to `Store.reserveTrusted`; it does not
+use a task bearer credential internally. Only submission occurs inside the row
+lock. No HTTP request, service execution or polling is introduced there. The
+existing worker executes/reconciles, the owner process handles approved chain
+exceptions, and subsequent durable ticks resume the research. This preserves the
+existing trust boundary; it is not proof of an external agent's authentication.
+
+The external `referenceTool` wrapper calls that same `submitReference` function
+through `SpendingClient.submit`, then waits outside any server transaction. Its
+agent bearer is checked by the HTTP gateway. Never copy the internal trusted DB
+port into an untrusted agent process.
+
+Run the internal pilot on a new task with `local:demo -- --new-task`. In the
+private console, start research, observe the basic payment, review/approve the
+premium purchase, and read the simulated report and separate delivery/charge
+receipts. Do not also run the standalone agent on that task during the pilot.
+
+### Actual implementation paths
+
+| Path | Role |
+|---|---|
+| `examples/reference-agent/workflow.ts` | Existing durable research agent; shared submission at basic/premium steps |
+| `packages/sdk/src/reference-tool.ts` | Strict input, fixed reference pricing/payload, shared submission and external waiter wrapper |
+| `packages/sdk/src/index.ts` | HTTP client, scoped SDK operations, pending/deadline/cancellation behavior and exports |
+| `apps/gateway/src/store.ts` | Task lock, reservations, exact idempotency and approval/budget enforcement |
+| `apps/worker/src/runtime.ts` | Invokes workflow and execution/reconciliation passes |
+| `packages/adapters/solana.ts` | Restricted payment and independently recorded service-delivery outcome |
+| `apps/reference-service/src/service.ts` | Self-operated TEST reference service and delivery-proof validation |
+| `apps/web/src/integration.ts` | Private integration setup, limits and observed outcomes |
+| `test/fullstack/flow.test.ts` | Actual internal research workflow and external-style client integration assertions |
+
+### Minimum changes for another developer
+
+For an agent using **this reference service**, import `SpendingClient` and
+`referenceTool` from the source-local SDK, provide its scoped URL/task/token, and
+replace one tool call with the wrapper. Persist an operation ID per actual
+purchase; handle approval/pending and inspect delivery before consuming evidence.
+No owner wallet, DB credential, framework migration or new model call is needed.
+The example re-export at `examples/existing-agent/reference-tool.ts` remains for
+existing imports. The SDK is not published to npm.
+
+For a **different paid tool**, replacing a URL is insufficient:
+
+1. Define and validate its payload, provider/tool/recipient identity, price units
+   and durable operation scope; adapt a tool-specific SDK wrapper.
+2. Implement a trusted adapter's `quote`, `execute` and `lookup` under
+   `packages/adapters`, including durable payment/provider receipts and separate
+   delivery outcome. Wire it in `apps/worker/src/runtime.ts`.
+3. Add explicit gateway execution gating in `apps/gateway/src/app.ts`, create a
+   compatible bounded policy, and provision any required owner-signed binding.
+   Keep new billable adapters disabled until separately authorized. Do not bypass
+   the current live-execution gate or widen an existing vault policy silently.
+4. Prove retry/restart, approval/hash/version binding, hard caps, reconciliation
+   and paid-but-failed delivery against that actual provider in integration tests.
+
+Remaining assumptions: fixed 20/40 TEST prices for the self-operated service;
+a funded, compatible task; working private worker/owner signer; trusted operator
+DB; source-local SDK; and a provider capable of payment proof/idempotent lookup.
+External services may not accept this vault-backed payment scheme. There is no
+x402 claim, universal HTTP/payment proxy or provider-dollar cap. The model stays
+simulated and billable API calls stay disabled. An external customer pilot is
+still unverified even after the internal research pilot succeeds.

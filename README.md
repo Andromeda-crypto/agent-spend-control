@@ -45,8 +45,11 @@ Private operator console ← usage ledger and reconciliation
 ```
 
 The agent submits an intent; the trusted worker executes supported adapters.
-The agent does not receive the owner wallet, database access or approval authority.
-Only requests routed through this gateway and its adapters are governed. It does
+External agents need only a task-scoped credential, without owner wallets,
+database access or approval authority. The bundled research workflow runs inside
+the trusted worker and uses a transactional store port. Owner signing remains
+in a separate component. Only requests routed through these policy and adapter
+paths are governed. It does
 not control unrelated API keys, wallets or tool calls an agent already holds.
 
 ## Quickstart
@@ -71,9 +74,9 @@ public hosting; keep the operator console and signing processes private.
 
 ## Integrate an existing agent
 
-The current adoption path is a **single-developer pilot**: connect one existing
-agent to the supported paid-reference tool, prove the allowed → approval →
-settlement flow, and test recovery and revocation before adding more tools.
+The current adoption path starts with the included research agent as an
+**internal integration pilot**, then one external developer. Prove the allowed →
+approval → settlement flow and test recovery before broadening onboarding.
 Broad self-service signup and public execution are outside this milestone.
 
 ### 1. Start a private test environment
@@ -92,7 +95,9 @@ prerequisites, platform configuration and private sign-in instructions.
 
 Open the private dashboard and choose **Integration**. Select the provisioned
 task to inspect its policy/binding readiness, setup instructions and requests.
-Do not start the built-in research workflow on the task intended for your agent.
+For the internal pilot, use **Run research** in Overview, approve premium and
+read the simulated report and separate payment/delivery receipts. For your own
+agent, provision a separate task and leave its built-in workflow idle.
 
 ### 2. Configure the agent process
 
@@ -115,8 +120,7 @@ The SDK and example are currently source-local, not published npm packages.
 From the repository root:
 
 ```ts
-import { SpendingClient } from './packages/sdk/src/index.js';
-import { referenceTool } from './examples/existing-agent/reference-tool.js';
+import { SpendingClient, referenceTool } from './packages/sdk/src/index.js';
 
 const client = new SpendingClient(
   process.env.SPEND_GATEWAY_URL!,
@@ -153,6 +157,16 @@ A timeout ends the client's wait, not the purchase. Reuse the **same operation
 ID and exact input** to resume. A new purchase needs a new operation ID. See
 [the integration guide](docs/INTEGRATION.md) for the full lifecycle and failure
 handling.
+
+### Included research-agent integration
+
+The [research workflow](examples/reference-agent/workflow.ts) routes its basic
+and premium purchases through [`submitReference`](packages/sdk/src/reference-tool.ts).
+It preserves its durable request keys, exact approval payload and report evidence.
+Because it runs inside the trusted worker, it supplies a transactional store port
+and resumes through durable workflow ticks; it does not make HTTP calls or wait
+for approval while holding database locks. External agents use the same tool
+contract through the task-scoped SDK client and bounded waiter.
 
 ## Execution modes
 

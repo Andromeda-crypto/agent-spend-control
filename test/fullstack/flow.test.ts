@@ -106,7 +106,12 @@ test('vault → paid reference delivery → ledger → approval → report, with
       assert.equal(submits,1);
       await advanceResearch(pool);current=await snapshot();
       const approval=current.requests.find(r=>r.state==='approval');assert.ok(approval);
-      assert.equal(approval.payload.amount,'40');
+      assert.deepEqual(approval.payload,{provider:'solana',tool:'reference',recipient:'reference-service',amount:'40',input:{dataset:'premium',topic:'Safe agent spending on Solana'}});
+      const pilotRun=(await pool.query('SELECT id FROM research_runs WHERE task_id=$1',[task])).rows[0];
+      const durable=(await pool.query('SELECT key FROM requests WHERE id=$1',[approval.id])).rows[0];
+      assert.equal(durable.key,`research:${pilotRun.id}:2`,'Internal integration preserves the existing durable request identity');
+      await advanceResearch(pool);await advanceResearch(pool);
+      assert.equal((await pool.query('SELECT count(*) FROM requests WHERE task_id=$1 AND key=$2',[task,durable.key])).rows[0].count,'1');
       await assert.rejects(new SpendingClient(apiURL,agentToken).approve(task,approval.id),/unauthorized/);
       await board!.refresh();
       await until(async()=>!!dom!.window.document.querySelector(`[data-approve="${task}:${approval.id}"]`));
@@ -122,6 +127,8 @@ test('vault → paid reference delivery → ledger → approval → report, with
       await board!.refresh();
       await until(async()=>dom!.window.document.body.textContent?.includes('SIMULATED MODEL REPORT')??false);
       const final=await snapshot();assert.equal(final.spent,'60');assert.equal(final.reserved,'0');assert.equal(final.callsLeft,8);
+      const reportRequest=final.requests.find(r=>r.payload.provider==='local-model'&&String(r.payload.input.prompt).startsWith('Write a concise research brief'));
+      assert.ok(reportRequest);assert.match(String(reportRequest.payload.input.prompt),/Designing safe agent payment recovery/,'Premium delivery remains in the report evidence');
       assert.equal(final.usage.length,4);assert.match(final.research[0].report??'',/SIMULATED MODEL/);
       const chainUsage=final.usage.filter(u=>u.receipt.cluster==='localnet');assert.equal(chainUsage.length,2);
       for(const u of chainUsage){assert.equal(u.receipt.fixture,false);assert.equal(u.receipt.selfOperatedService,true);assert.ok(u.receipt.chainReceipt);assert.ok(BigInt(String(u.receipt.feeLamports))>0n);assert.ok(BigInt(String(u.receipt.receiptRentLamports))>0n);assert.equal(u.delivery,'delivered');}

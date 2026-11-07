@@ -72,3 +72,5 @@ export class SpendingClient {
     return this.request('PATCH', `/tasks/${encodeURIComponent(task)}/policy`, PolicyEdited, { expectedVersion, policy: Policy.parse(policy) });
   }
 }
+
+export { referenceTool, submitReference, ReferenceInput } from './reference-tool.js';

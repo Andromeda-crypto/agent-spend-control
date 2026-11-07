@@ -71,3 +71,16 @@ The public site gained a developer entry point and guide link. Its deployed
 production artifact passed the existing anonymous hosted checks and byte audit;
 no privileged runtime was published. The real outside-developer pilot is still
 pending selection of an actual agent/repository.
+
+## Selected internal research pilot
+
+The actual research workflow at `examples/reference-agent/workflow.ts` now submits
+its premium reference through `packages/sdk/src/reference-tool.ts`'s shared
+`submitReference` boundary. Its transaction-bound internal port performs no HTTP
+or approval waiting while locked. Fresh full-stack tests verify the existing
+`research:<run>:2` key, exact 40 TEST payload, one approval and the premium
+receipt's continued inclusion in the report input. A fresh Chrome research run
+also passed real local payments/delivery, owner approval, simulated report,
+reconnect/refresh and confirmed revocation. Its test task is revoked as expected;
+all prior ledger/access/wallet state is retained. This establishes the selected
+internal pilot, not an outside customer adoption result.

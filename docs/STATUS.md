@@ -39,9 +39,34 @@ Verified:
   match the audit byte-for-byte, the developer guide returns 200, and no public
   execution or private console was deployed.
 
-Private local stack was started for verification with a new bounded task; it
-retains DB/ledger/wallet/access state. The pilot task has 60 TEST spent and 60
-remaining, with two settled deliveries. No Devnet or OpenAI execution occurred.
+The private local stack was used for two pilots while retaining all state: the
+independent tool-client task has two settled deliveries (60 TEST spent), and a
+fresh task exercises the actual built-in research agent below. No Devnet or
+OpenAI execution occurred.
+
+## Selected internal research pilot
+
+User selected the existing `advanceResearch` agent at
+`examples/reference-agent/workflow.ts`. Both its basic and premium requests now
+call `submitReference` in `packages/sdk/src/reference-tool.ts`. The SDK exports
+both the shared submitter and external `referenceTool` wrapper; the original
+example module re-exports them for compatibility.
+
+Internal calls use a transaction-bound `Store.reserveTrusted` submission port,
+not HTTP or SDK polling under DB locks. The external wrapper uses the scoped
+HTTP SDK and waits outside server transactions. The internal pilot therefore
+preserves the existing trusted-worker boundary; external auth is separately tested.
+Premium payload, `research:<run-id>:2` key, exact owner hash/version approval,
+service scope, allowance enforcement and receipt/report evidence remain unchanged.
+The full integration tests explicitly verify those invariants, two paid deliveries,
+failed-delivery accounting, replay protection and simulated-model report labels.
+The existing research-agent Chrome walkthrough passed after this routing change:
+actual local payments and deliveries, exact approval, simulated report, reconnect,
+refresh and confirmed revocation. The fresh pilot task is now revoked as the test
+expects, with its receipts retained; the prior external-style task remains intact.
+The local stack is running at the printed private URL for review; starting another
+run requires a fresh bounded task or a suitable existing active task.
+See [minimum integration changes and assumptions](INTEGRATION.md#first-internal-pilot-existing-research-agent).
 
 ## Verified public release — 2026-11-07
 
@@ -183,12 +208,16 @@ tested only until fresh explicit cost authorization and secure configuration.
 
 ## Next action
 
-Run the first real developer pilot using [INTEGRATION.md](INTEGRATION.md): choose
-an existing agent, connect only its paid-reference tool, collect setup friction
-and time-to-first-receipt, and verify approval/retry/revocation. Do not substitute
-our automated example for actual adoption evidence. Keep the operator stack
-private and test-token-only. Broad login/self-service, npm SDK distribution,
-additional service adapters and a hosted live backend remain later milestones.
-Docker/restore verification remains required before moving private infrastructure.
-Preserve Devnet deployment and all existing private state; no billable OpenAI
-calls, public live execution or x402 support are authorized/claimed.
+Review the completed internal research pilot and its private Integration screen.
+Use [INTEGRATION.md](INTEGRATION.md) to connect the next agent: for the same
+reference service, supply scoped URL/task/token and replace one tool call while
+persisting operation IDs. A different paid tool needs its own validated wrapper,
+trusted adapter, gateway execution gating and compatible policy/binding; changing
+an endpoint alone is insufficient. Provider payment compatibility and idempotent
+lookup remain assumptions to verify. No actual external adopter is claimed.
+
+Keep the operator stack private and test-token-only. Broad login/self-service,
+npm SDK distribution, additional service adapters and a hosted live backend are
+later milestones. Docker/restore verification is still required before moving
+private infrastructure. Preserve Devnet and private state; no billable OpenAI,
+public live execution or x402 support is authorized/claimed.
