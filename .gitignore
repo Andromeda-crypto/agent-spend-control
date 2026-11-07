@@ -8,3 +8,4 @@ coverage/
 target/
 dist/
 *.wallet.json
+deploy/operator.env

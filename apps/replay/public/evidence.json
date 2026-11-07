@@ -1,0 +1,23 @@
+{
+  "program": "8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6",
+  "verifiedAt": "2026-11-07T01:31:04.507Z",
+  "mint": "M6LTfRTCZQdpu9JZ6aWxv4s5kxUsFj1zyvZxLfiS9GV",
+  "receipts": [
+    {
+      "signature": "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
+      "explorer": "https://explorer.solana.com/tx/588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9?cluster=devnet",
+      "chainReceipt": "5Dwd7CQzvmuecFCHnX5SvBCw3GWr3SvMEadsPGSeNArW",
+      "confirmation": "finalized",
+      "feeLamports": "5000",
+      "receiptRentLamports": "1239520"
+    },
+    {
+      "signature": "4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J",
+      "explorer": "https://explorer.solana.com/tx/4FRPECduD4baMPKGNWh6c3HoFedBBLmsZJqpfxRaercuT9XgpPCgQBSNEMYiAb3GccsbRQ6xNobr8h4vyrXdE14J?cluster=devnet",
+      "chainReceipt": "ERLfDko9J885BMRwnooPrhD1xUK4cPk42Hrw8ccZ1Rsm",
+      "confirmation": "finalized",
+      "feeLamports": "5000",
+      "receiptRentLamports": "1239520"
+    }
+  ]
+}

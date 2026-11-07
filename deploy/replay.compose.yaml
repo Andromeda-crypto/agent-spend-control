@@ -1,0 +1,12 @@
+name: agent-spend-replay
+services:
+  replay:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: public-replay
+    ports: ["8080:8080"]
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/var/cache/nginx, /var/run, /tmp]
+    security_opt: ["no-new-privileges:true"]

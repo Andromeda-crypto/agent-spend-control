@@ -130,3 +130,19 @@ files are ignored by Git.
 
 See [HTTP/SDK integration](docs/API.md), [architecture](docs/ARCHITECTURE.md),
 [Solana notes](docs/STAGE2.md), and [resume status](docs/STATUS.md).
+
+## External demonstration
+
+The public experience is a separate, credential-free **read-only replay**:
+
+```sh
+npm run replay:dev
+npm run replay:build
+```
+
+Publish only `apps/replay/dist`. It uses recorded finalized Devnet payments;
+blocked/revocation scenes are labeled illustrations of locally tested behavior.
+Model output is simulated; TEST token/service are self-operated. The operator
+console must remain private. See [demo script](docs/DEMO_SCRIPT.md),
+[hosting plan and portable containers](docs/HOSTING.md), and
+[browser findings](docs/BROWSER_QA.md).

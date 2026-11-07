@@ -26,6 +26,7 @@ const pgPort=devnet?54330:54329,rpcPort=18899;
 const dbURL=`postgres://spend@127.0.0.1:${pgPort}/postgres`,rpcURL=devnet?'https://api.devnet.solana.com':`http://127.0.0.1:${rpcPort}`;
 async function available(preferred:number):Promise<number>{return new Promise((resolve,reject)=>{const server=createServer();server.once('error',error=>{if((error as NodeJS.ErrnoException).code==='EADDRINUSE')void available(0).then(resolve,reject);else reject(error);});server.listen(preferred,'127.0.0.1',()=>{const port=(server.address() as {port:number}).port;server.close(()=>resolve(port));});});}
 const apiPort=await available(devnet?3201:3101),referencePort=await available(devnet?3202:3102),webPort=await available(devnet?5175:5174);
+const replayPort=await available(5176);
 const apiURL=`http://127.0.0.1:${apiPort}`,referenceURL=`http://127.0.0.1:${referencePort}`,webURL=`http://127.0.0.1:${webPort}`;
 const children:ChildProcess[]=[],logs:Awaited<ReturnType<typeof open>>[]=[],stop=new AbortController();
 const smoke=process.argv.includes('--smoke');let stopping=false;
@@ -134,7 +135,8 @@ try{
   await ready(async()=>(await fetch(`${referenceURL}/catalog`)).ok,'reference service');
   await child('worker',process.execPath,['--import','tsx','apps/worker/src/main.ts','--watch'],{...publicEnv,AGENT_WALLET_PATH:join(state,'agent.wallet.json')});
   await child('owner-sync',process.execPath,['--import','tsx','apps/owner/src/main.ts','--watch'],{...publicEnv,OWNER_WALLET_PATH:devnet?resolve('.local/devnet-deployer.wallet.json'):join(state,'owner.wallet.json')});
-  await child('web',process.execPath,['node_modules/vite/bin/vite.js','--config','apps/web/vite.config.ts','apps/web','--strictPort','--port',String(webPort)],{...baseEnv,GATEWAY_TARGET:apiURL});
+  await child('replay',process.execPath,['node_modules/vite/bin/vite.js','--config','apps/replay/vite.config.ts','apps/replay','--strictPort','--port',String(replayPort)],{...baseEnv,REPLAY_BASE:'/replay/'});
+  await child('web',process.execPath,['node_modules/vite/bin/vite.js','--config','apps/web/vite.config.ts','apps/web','--force','--strictPort','--port',String(webPort)],{...baseEnv,GATEWAY_TARGET:apiURL,REPLAY_TARGET:`http://127.0.0.1:${replayPort}`});
   await ready(async()=>(await fetch(webURL)).ok,'dashboard');
   console.log(`Dashboard: ${webURL}`);
   console.log(`Sign in with the owner key in ${state}/access.json (kept private; never printed).`);

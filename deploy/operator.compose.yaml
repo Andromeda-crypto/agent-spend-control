@@ -1,0 +1,96 @@
+# PRIVATE, single-operator Devnet stack. No anonymous ingress, no new deployment.
+name: agent-spend-operator
+x-runtime: &runtime
+  build:
+    context: ..
+    dockerfile: deploy/Dockerfile
+    target: runtime
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  security_opt: ["no-new-privileges:true"]
+x-public: &public
+  DATABASE_URL: ${DATABASE_URL:?Set internal DATABASE_URL in the private operator env file}
+  SOLANA_CLUSTER: devnet
+  SOLANA_RPC_URL: https://api.devnet.solana.com
+  SOLANA_PROGRAM_ID: 8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6
+  REFERENCE_MINT: ${REFERENCE_MINT:?Use the existing TEST mint}
+  REFERENCE_RECIPIENT: ${REFERENCE_RECIPIENT:?Set existing service public key}
+  AGENT_PUBLIC_KEY: ${AGENT_PUBLIC_KEY:?Set existing agent public key}
+  ENABLE_LIVE_EXECUTION: "false"
+  ENABLE_FIXTURE_ADAPTER: "true"
+  ENABLE_DEVNET_DEMO_MODEL: "true"
+  ENABLE_LOCALNET_MODEL: "false"
+  OPENAI_API_KEY: ""
+  OWNER_WALLET_PATH: ""
+  AGENT_WALLET_PATH: ""
+services:
+  database:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: spend
+      POSTGRES_DB: spend
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set a database password}
+    volumes: ["database:/var/lib/postgresql/data"]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U spend -d spend"]
+      interval: 5s
+      retries: 20
+  migrate:
+    <<: *runtime
+    restart: "no"
+    environment: *public
+    command: [node, --import, tsx, scripts/migrate.ts]
+    depends_on:
+      database: {condition: service_healthy}
+  gateway:
+    <<: *runtime
+    environment:
+      <<: *public
+      HOST: 0.0.0.0
+      PORT: "3001"
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  reference:
+    <<: *runtime
+    environment:
+      <<: *public
+      DATABASE_URL: ""
+      HOST: 0.0.0.0
+      REFERENCE_PORT: "3002"
+    command: [node, --import, tsx, apps/reference-service/src/main.ts]
+  worker:
+    <<: *runtime
+    environment:
+      <<: *public
+      AGENT_WALLET_PATH: /run/secrets/agent_wallet
+      REFERENCE_SERVICE_URL: http://reference:3002
+    secrets: [agent_wallet]
+    command: [node, --import, tsx, apps/worker/src/main.ts, --watch]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  owner-signing:
+    <<: *runtime
+    environment:
+      <<: *public
+      OWNER_WALLET_PATH: /run/secrets/owner_wallet
+    secrets: [owner_wallet]
+    command: [node, --import, tsx, apps/owner/src/main.ts, --watch]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  console:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: operator-console
+    restart: unless-stopped
+    ports: ["127.0.0.1:8081:8080"]
+    depends_on: [gateway]
+secrets:
+  owner_wallet:
+    file: ${OWNER_WALLET_FILE:?Set an existing private owner signer file outside the checkout}
+  agent_wallet:
+    file: ${AGENT_WALLET_FILE:?Set an existing restricted agent signer file outside the checkout}
+volumes:
+  database:

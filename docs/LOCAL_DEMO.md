@@ -89,3 +89,28 @@ not an OS sandbox or a public multi-user custody service.
 Owner credential rotation intentionally invalidates the saved old token. Update
 your private access configuration with the replacement key; do not bypass the
 revocation by resetting account state.
+
+## Guided browser experience
+
+The launcher also serves a read-only replay under `/replay/`. The start screen
+explains the active network and simulated-model mode. Sign in privately with
+the masked owner-key field, select the funded task, and use the visible **Run
+research** action. The **Demo guide** explains approval and allowance terms.
+The console preserves the selected task on refresh, shows a persistent connection
+status, and keeps last confirmed data visible during reconnection.
+
+To repeat the real Chrome walkthrough against a newly seeded local task:
+
+```sh
+# First stop the previous stack gracefully, then start a fresh task:
+PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run local:demo -- --new-task
+# Separate terminal, while that stack runs:
+npm run test:browser
+```
+
+The check consumes one local task run and permanently revokes that task at the
+end. It does not touch Devnet. `BROWSER_DEMO_URL` and `BROWSER_ACCESS_FILE` may
+select the localhost port/private access file; `CHROME_PATH` selects an installed
+Chrome executable. The default path is macOS Google Chrome. No trace, video or
+HAR is recorded. Screenshots after masked sign-in remain ignored in `.local/qa`.
+Never capture the password-filled sign-in form or a credential download.

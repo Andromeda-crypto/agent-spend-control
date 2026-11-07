@@ -26,7 +26,11 @@
     "local:demo": "node --import tsx scripts/local-demo.ts",
     "devnet:plan": "node --import tsx scripts/deploy-devnet.ts",
     "devnet:deploy": "node --import tsx scripts/deploy-devnet.ts --deploy",
-    "devnet:demo": "node --import tsx scripts/local-demo.ts --devnet"
+    "devnet:demo": "node --import tsx scripts/local-demo.ts --devnet",
+    "replay:dev": "vite --config apps/replay/vite.config.ts apps/replay",
+    "replay:build": "vite build --config apps/replay/vite.config.ts apps/replay",
+    "test:browser": "node test/browser/demo.mjs",
+    "test:replay": "npm run replay:build && node test/browser/replay.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "4.0.110",
@@ -43,6 +47,7 @@
     "@types/node": "24.10.0",
     "@types/pg": "8.15.6",
     "jsdom": "31.0.0",
+    "playwright": "1.65.0",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
     "vite": "8.3.6"

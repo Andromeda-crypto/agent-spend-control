@@ -1,171 +1,134 @@
 # Status — 2026-11-06
 
-## Start here
+## Resume here
 
-Branch: `feat/vault-agent-dashboard`.
-The previous staged checkpoint was committed as `a37f078` at the start of this
-session. Implementation checkpoint: `9b2f195`. This increment completes the secure provisioning and complete local
-payment/service/dashboard workflow that checkpoint was missing.
+Branch: `feat/vault-agent-dashboard`. Starting checkpoints: implementation
+`9b2f195`, verification notes `ee9579e`. This increment prepares the external demo;
+Completed demo-polish work is committed and pushed to this branch for
+the overnight handoff. No application or service has been published.
 
-**Billable OpenAI calls remain unauthorized.** The user selected “Prepare
-integration; no billable calls yet.” The current process reported the API key
-not set without printing a value. The demo launchers explicitly remove OpenAI
-credentials from child environments and set live execution false. A future key
-or environment flag does not override the user's restriction.
+**Preserved:** the verified Devnet program, authority, wallets, ledger and DB.
+No program redeploy, upgrade, replacement buffer or Devnet transaction was made
+in this increment. **Billable OpenAI calls remain unauthorized.** Launchers and
+private container configuration keep live execution false; model output is
+explicitly simulated. TEST token and reference service are self-operated.
+No x402 support is claimed.
 
-The user funded the dedicated deployer with **2 free Devnet SOL**. Deployment
-is finalized and verified against the tested binary and disclosed upgrade
-authority. Public evidence: [deployment](deployments/devnet.json) and
-[complete payment workflow](deployments/devnet-workflow.json). The Devnet smoke
-completed two finalized payments (60 TEST total), owner approval and a report.
-The TEST mint is self-operated and the model is explicitly simulated.
+Program: `8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6`.
+Authority: `ATJeSsM6kshKaTp4MVipQaTksNpEdAvkYkc7ofY1rU9V`.
+Existing public proof: [deployment](deployments/devnet.json) and
+[two finalized payments](deployments/devnet-workflow.json).
+Last previously observed deployer balance: 0.41962504 test SOL; not refreshed in
+this increment. Private keys/access remain under ignored `.local/`.
 
-## Requested milestones
+## Implemented
 
-| Milestone | Current state |
-|---|---|
-| Owner/agent identity and rotation | Implemented; workspace isolation, single-use owner rotation and agent credential lifecycle are tested. Developer owner-key sign-in remains; email/SSO is future work. |
-| Solana enforcement | Local restrictions and atomic transfers verified. Secure funded provisioning/binding and actual payment/service integration now pass. Devnet deployment and complete test-token workflow now verified. |
-| API, paid reference service and research agent | Local and Devnet paths verified, including paid delivery, approval and report; recovery failure scenarios tested locally. OpenAI adapter is implemented and mock-tested; actual OpenAI calls are intentionally not run. Test-cluster demos use a clearly simulated model. |
-| Dashboard | Fixture and actual local-validator payment workflows tested through DOM + real HTTP, PostgreSQL, worker and service. Real-browser visual/mobile QA and production hosting remain. |
+- Existing owner/agent identity, rotations, tenant isolation, durable quota and
+  lifecycle, exact approvals, bounded Anchor vault, binding/provisioning,
+  reconciliation and actual paid service retained.
+- Operator UX: clear network/model label before sign-in, demo guide, visible
+  next action and research button, allowance definitions, exact approval context,
+  separate payment/delivery outcomes and expandable technical receipts.
+- Browser fixes: keyboard focus/open details survive polling, clearer errors and
+  loading, connection status and automatic recovery, refresh retains selected
+  task, confirmed chain revocation visible, improved narrow layout/contrast.
+- Credential values no longer rendered in creation/rotation dialogs; private
+  download only. Owner sign-in is masked. No credentials in public replay.
+- Separate `apps/replay` public build: seven-scene guided replay, self-operated
+  TEST/service and simulated-model labels, actual finalized payment evidence,
+  and explicitly illustrated blocked/revocation scenes. No API or signing path.
+- CI now builds the separate replay artifact (remote CI has not run here).
+- Separate Vite caches fix real blank-screen/504 caused by competing optimizers.
+  Launcher serves `/replay/` and preserves existing persistent local state.
+- Portable public/private Docker targets, Nginx, Compose and per-role environment
+  configuration. Private console bound only to loopback, public replay has no
+  gateway proxy, only owner-signing process receives owner signer mount.
+- [HOSTING.md](HOSTING.md): process placement, environment names, origins/auth,
+  restart/persistence, migration/restore and privilege boundaries.
+- [DEMO_SCRIPT.md](DEMO_SCRIPT.md): concise walkthrough, safe new-task procedure,
+  fresh-visitor instructions and labeled replay fallback.
 
-Stage 0 remains complete. Do not describe the overall product as production-ready
-or all live integrations as complete.
+## Verified this increment
 
-## New behavior
+- TypeScript check and both production web builds pass.
+- 10 Node tests, 7 real PostgreSQL/HTTP tests and 15 local program/full-workflow
+  integration tests pass. Dependency install audit: zero vulnerabilities.
+- Real Chrome walkthrough passes: masked sign-in/error, funded task, research,
+  actual local 20/40 TEST transfers, approval, report, revocation observed on
+  chain; keyboard/modal focus, offline/reconnect, refresh, desktop and 375px.
+- Production replay browser check covers restrictive CSP, public-evidence
+  allowlist, absence of operator code/known token, no API or Authorization
+  requests, loading/error, all scenes, focus/refresh and 1440/375/320px.
+- Screenshots inspected; findings/fixes in [BROWSER_QA.md](BROWSER_QA.md).
+- Both Compose files parse as YAML; Docker schema/runtime validation remains.
+- No privileged console was published, no hosting/service provisioned, no real
+  funds or billable API calls used.
 
-- Owner-only `/tasks/:id/vault` binding requires an Ed25519 proof covering the
-  workspace/task, canonical policy hash/version, program, cluster, mint,
-  agent and recipient. The gateway independently checks on-chain identities,
-  limits, expiry, decimals, account ownership/delegation, PDA derivation and funding.
-- RPC inspection runs outside transactions; owner authority and policy version
-  are rechecked under the task lock before binding. Cross-workspace, agent-only,
-  forged, mismatched-policy and mismatched-task bindings are rejected.
-- Creation + deposit use one atomic Solana transaction. Its signed wire and
-  signature are persisted before submission. Retries reuse that same transaction
-  and cannot deposit twice, even after legitimate spending. Saved plans freeze
-  their policy; ambiguous provisioning is retained for investigation.
-- Owner exception synchronization rechecks the exact approved payload/version.
-  Revocation is shown as confirmed only after the chain state is observed.
-  Owner signing remains in a separate operator process from the restricted agent.
-- Chain settlement verifies the receipt, expected signature and actual transaction
-  accounts. Ledger entries keep token amount, delivery outcome, fee lamports and
-  receipt-account rent separate. A failed delivery remains charged if paid.
-- One active research run per task. Four steps use fixture, local, devnet-demo or
-  live mode with explicit labels. Simulated model output never claims an OpenAI
-  request. Actual model token/dollar usage is not invented.
-- `local:demo` starts persistent local PostgreSQL, validator, gateway, service,
-  worker, owner synchronizer and dashboard. It seeds a signed, funded task and
-  keeps private access data in ignored files, never console output.
-- `devnet:demo` uses the actual Devnet program and a self-operated TEST mint with
-  a simulated model. Its successful smoke run writes public evidence to
-  `docs/deployments/devnet-workflow.json`; absence means not yet verified.
-- Public RPC requests are paced and HTTP 429 retries respect Retry-After while
-  preserving the original payload. Complete genesis hashes prevent mainnet use;
-  regression tests reject truncated chain references and mainnet behind localhost.
-- Ordered migrations 006 and 007 add provisioning plans and explicit demo modes.
-  Applied migrations 001–005 were preserved.
+## Run / demonstrate
 
-## Verified so far in this increment
-
-```sh
-npm run check
-npm test
-npm run web:build
-npm run demo
-PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run test:postgres
-PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run test:integration
-PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run local:demo -- --smoke
-npm run devnet:plan
-```
-
-- 10 Node tests: policy/authentication, mock OpenAI usage, full genesis identities,
-  serial RPC execution, identical-payload retry and Retry-After handling.
-- 7 PostgreSQL/HTTP tests: reservations, quota races, rollback, restart recovery,
-  tenant isolation, concurrent owner rotation and the fixture dashboard flow.
-- 15 combined tests: local program restriction suite plus full dashboard → API →
-  vault → authenticated paid service → ledger → report workflow. This includes
-  concurrent provisioning, exact binding proofs, lost submission response with
-  one payment, premium owner approval, failed delivery that stays charged,
-  idempotent re-provisioning after spending, and reconciliation after revocation.
-- The multi-process launcher smoke test passed with two actual local SPL
-  payments, 60 TEST spent, zero reserved, and simulated model responses.
-- Devnet deployment and smoke passed: two finalized on-chain payments, 60 TEST,
-  approval and authenticated delivery, with fee/rent evidence saved publicly.
-- Local startup now waits for successful transaction simulation before writes,
-  and shutdown waits for finality. State is preserved across restarts.
-- Prior checkpoint: 4 native Rust tests and the SBF build passed. Rust program
-  enforcement source is unchanged in this increment.
-
-Fresh checkout of `9b2f195`: `npm ci` (zero audit vulnerabilities),
-TypeScript check, production web build and fixture terminal demo all passed.
-The local multi-process smoke also passed on two successive retained-state
-launches. The full chain suite uses this machine's installed toolchain/build;
-a clean-machine toolchain installation has not been independently reproduced.
-Remote CI, real-browser visual QA, production hosting and restore tests have not
-been run. No billable API request or real-money transaction was made.
-
-## Run it
-
-The complete instructions are in [LOCAL_DEMO.md](LOCAL_DEMO.md).
+External visitor / reliable fallback, no credentials or toolchain needed:
 
 ```sh
 npm ci
-npm run vault:build
-PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run local:demo
+npm run replay:dev
+# Public artifact only:
+npm run replay:build
+npm run test:replay
 ```
 
-Open the printed dashboard URL (normally http://127.0.0.1:5174) and sign in with the private owner token from
-`.local/local-demo-v2/access.json`. Run the funded task and approve its premium
-purchase. Ctrl+C stops only the processes started by the launcher and preserves
-the database and ledger. `--new-task` seeds another bounded task under that owner.
-Local ledgers are tied to their program binary hash; preserve old state before
-starting a new demo after changing the program build.
-
-After a verified Devnet deployment:
+Private operator workflow (PostgreSQL 17 + existing Solana toolchain/build):
 
 ```sh
-PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run devnet:demo
+PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run local:demo -- --new-task
+# While the stack runs, separate terminal:
+npm run test:browser
 ```
 
-Its private access file is `.local/devnet-demo/access.json`. Never paste owner
-keys or wallet data into chat. All such files and build artifacts are ignored.
-Owner credential rotation intentionally requires updating private access config;
-old tokens are not silently reactivated.
+Open printed dashboard URL, normally `http://127.0.0.1:5174`. Masked owner sign-in
+uses the private access file locally; never show it to an audience. The browser
+check consumes/revokes one local task, so use `--new-task` before repeating.
+The latest local access file points to a browser-tested, revoked task; seed a
+new task before starting another run. Prior tasks and receipts are preserved.
+Keep prior data; do not reset uncertain payments. Ctrl+C gracefully stops owned
+processes and waits for local ledger finality.
 
-## Devnet deployment state and recovery
+Existing Devnet interactive demo remains operator-controlled:
+`PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run devnet:demo -- --new-task`.
+This funds another bounded TEST task using existing identities; it does not
+redeploy. It requires free test SOL for fees/rent. See [LOCAL_DEMO.md](LOCAL_DEMO.md).
+Do not run `devnet:deploy` merely to resume this work.
 
-- Program: `8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6`.
-- Deployer / intended upgrade authority:
-  `ATJeSsM6kshKaTp4MVipQaTksNpEdAvkYkc7ofY1rU9V`.
-- Remaining deployer balance after verified demo: 0.41962504 free Devnet SOL.
-- Deployment buffer (consumed by finalization; its local keypair is retained): `AQRxVer3WRTRdmRCiuimBtVCv6dQCA5W4rpB5pdhRY1x`.
-- Private paths: `.local/program-keypair.json`,
-  `.local/devnet-deployer.wallet.json`, `.local/devnet-buffer.wallet.json`.
-- Initial native CLI uploads stalled; the pinned CLI's UDP path ignored the
-  HTTP-only option. Parallel RPC uploads then exhausted retries. The deployment
-  command now writes sequentially into the retained buffer, skips matching bytes,
-  backs off on throttling and verifies the complete ELF before finalization.
-- Program-data rent quote: 1,539,102,840 test lamports. This is separate from
-  task-token allowances. Existing buffer funding is reused, not deposited again.
+## Hosted readiness / smallest blockers
 
-For verification/recovery, run `npm run devnet:plan`, inspect program/buffer state, then use
-`npm run devnet:deploy`. Do not fund a new buffer blindly or assume a timeout
-means failure. The command will not automatically upgrade an existing program
-whose binary or authority differs from this checkpoint. No real SOL or paid RPC
-is authorized. The public deployment JSON is the authority for success.
+The public replay is prepared as an isolated static artifact. Choose an existing
+static host, publish **only `apps/replay/dist`**, and verify its HTTPS origin,
+evidence loading, CSP/headers and mobile refresh there. No service is provisioned.
+The prepared public container is an alternative, not a verified deployment.
 
-## Remaining release work
+Docker is unavailable here: Dockerfile image builds, Compose runtime and mounted
+signer UID access still need verification on a Docker-equipped machine. The
+private stack also needs DB backup/restore validation and SSH/VPN/tunnel checks
+before moving existing operator state. Public visitor execution isolation is
+not implemented: keep Devnet live execution private. The owner-signing process
+trusts the operator DB; it is not independent review against a compromised host.
 
-Devnet deployment and its test-token workflow are complete.
-Only with fresh explicit cost authorization and securely configured
-credentials, exercise the actual OpenAI adapter in a bounded full workflow.
-The user has not yet authorized that action.
+Native mobile/browser and screen-reader checks, hosted login/credential recovery,
+DB least privilege, monitoring, rate limits, supervised schedules and broader
+security review remain product work. Actual OpenAI integration remains mock-
+tested only until fresh explicit cost authorization and secure configuration.
 
-Next product work: real-browser/mobile/accessibility checks, secure interactive
-wallet onboarding, hosted web/gateway/worker/database, backup/restore, supervised
-scheduling, bounded demo costs, pagination, retention, monitoring, production
-login and credential recovery, database least privilege and security review.
-The current developer owner-key console and operator wallets are trusted
-infrastructure, not a public multi-user custody product. x402 compatibility is
-still unverified; this is a direct vault-backed self-operated service.
+## Overnight handoff
+
+Implementation stopped at the user's request. The session-owned local demo
+launcher and its gateway, worker, owner synchronizer, reference service, replay,
+web, PostgreSQL and validator have stopped gracefully. Database, validator
+ledger, wallet and private access files are retained; nothing was reset or
+redeployed. The browser-tested local task is permanently revoked as expected.
+
+**Exact next action:** review this checkpoint, choose an existing static hosting
+destination for the public replay, then publish only `apps/replay/dist` and
+verify HTTPS, evidence loading, headers and narrow-screen refresh on that origin.
+Do not expose the operator console. Do not provision paid services or make
+billable OpenAI calls without authorization. For another local walkthrough,
+start `local:demo -- --new-task` using the command above; preserve prior state.
+Docker/private-stack runtime and restore verification remain separate gates.

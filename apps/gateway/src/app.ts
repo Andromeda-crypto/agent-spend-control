@@ -23,6 +23,7 @@ export function createGateway(pool: pg.Pool, options:{vault?:VaultConfiguration;
     res.setHeader('Cache-Control', 'no-store');
     try {
       if (req.method === 'GET' && req.url === '/health') { res.end(JSON.stringify({ status: 'ok' })); return; }
+      if(req.method==='GET'&&req.url==='/session'){res.end(JSON.stringify({network:options.vault?.cluster??'fixture',simulatedModel:!!(options.localModel||options.devnetDemoModel)||process.env.ENABLE_FIXTURE_ADAPTER==='true'}));return;}
       const registration = req.method === 'POST' && req.url === '/owners';
       const token = req.headers.authorization?.match(/^Bearer ([A-Za-z0-9_-]{32,})$/)?.[1];
       if (!token && !registration) throw new Error('unauthorized');
