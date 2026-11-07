@@ -30,7 +30,9 @@
     "replay:dev": "vite --config apps/replay/vite.config.ts apps/replay",
     "replay:build": "vite build --config apps/replay/vite.config.ts apps/replay",
     "test:browser": "node test/browser/demo.mjs",
-    "test:replay": "npm run replay:build && node test/browser/replay.mjs"
+    "test:replay": "npm run replay:build && node test/browser/replay.mjs",
+    "agent:reference": "node --env-file-if-exists=.env.agent.local --import tsx examples/existing-agent/main.ts",
+    "test:agent-browser": "node test/browser/integration.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "4.0.110",

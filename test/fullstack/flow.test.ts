@@ -17,6 +17,8 @@ import { syncOwnerDecisions } from '../../packages/solana/owner-sync.js';
 import { LocalModelAdapter } from '../../packages/adapters/local-model.js';
 import { createGateway } from '../../apps/gateway/src/app.js';
 import { createReferenceService } from '../../apps/reference-service/src/service.js';
+import { referenceTool } from '../../examples/existing-agent/reference-tool.js';
+import { PendingRequestError } from '../../packages/sdk/src/index.js';
 import { SpendingClient } from '../../packages/sdk/src/index.js';
 import { transaction } from '../../apps/gateway/src/database.js';
 import { migrate } from '../../apps/gateway/src/migrations.js';
@@ -137,6 +139,28 @@ test('vault → paid reference delivery → ledger → approval → report, with
       const fake=await generateKeyPairSigner();
       const forged=Buffer.from(await crypto.subtle.sign('Ed25519',fake.keyPair.privateKey,new Uint8Array(deliveryMessage(final.vault!.policy_address,first.purchase_id,input.dataset,input.topic)))).toString('base64');
       assert.equal((await fetch(url,{headers:{'x-agent-signature':forged}})).status,403);
+    });
+    await t.test('an existing agent tool waits for exact approval and resumes the same purchase after timeout',async()=>{
+      const created=await sdk.createTask(policy);await provisionVault(pool,config,ownerToken,created.task,owner);
+      const agentSDK=new SpendingClient(apiURL,created.agent),tool=referenceTool(agentSDK,created.task);
+      const input={operationId:'external-job/basic',topic:'Existing agent integration',dataset:'basic' as const};
+      await assert.rejects(tool(input,{timeoutMs:75}),PendingRequestError);
+      const before=await sdk.snapshot(created.task);assert.equal(before.requests.length,1);const id=before.requests[0].id;
+      const pending=tool(input,{timeoutMs:20000});
+      await until(async()=>{await runWorkerOnce(pool,[normal]);return (await sdk.snapshot(created.task)).spent==='20';});
+      const done=await pending;assert.equal(done.request.id,id);assert.equal(done.usage?.delivery,'delivered');
+      assert.equal((await sdk.snapshot(created.task)).requests.length,1);
+      const premium={operationId:'external-job/premium',topic:input.topic,dataset:'premium' as const};
+      let approvalId='';const waiting=tool(premium,{timeoutMs:20000,onApproval:id=>{approvalId=id;}});
+      await until(async()=>!!approvalId);
+      await assert.rejects(agentSDK.approve(created.task,approvalId),/unauthorized/);
+      await sdk.approve(created.task,approvalId);await syncOwnerDecisions(pool,client,owner);
+      await until(async()=>{await runWorkerOnce(pool,[normal]);return (await sdk.snapshot(created.task)).spent==='60';});
+      const result=await waiting;assert.equal(result.request.id,approvalId);assert.equal(result.usage?.delivery,'delivered');
+      await assert.rejects(tool({...input,topic:'Changed payload'}),/idempotency_conflict/);
+      await assert.rejects(agentSDK.submit(created.task,'above-cap',{provider:'solana',tool:'reference',recipient:'reference-service',amount:'61',input:{dataset:'basic',topic:input.topic}}),/hard_limit/);
+      const final=await sdk.snapshot(created.task);assert.equal(final.requests.length,2);assert.equal(final.spent,'60');assert.equal(final.reserved,'0');
+      assert.equal((await pool.query('SELECT count(*) FROM chain_attempts WHERE task_id=$1',[created.task])).rows[0].count,'2');
     });
     await t.test('confirmed payment with failed delivery remains charged and is never repaid',async()=>{
       const created=await sdk.createTask(policy);await provisionVault(pool,config,ownerToken,created.task,owner);

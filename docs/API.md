@@ -116,7 +116,7 @@ Authenticated `GET /capabilities` reports configuration booleans only, never
 secret values. `POST /tasks/:task/research` accepts
 `{"topic":"Safe spending on Solana","mode":"fixture"}` and starts the durable
 four-step reference workflow. Live mode requires explicit operator enablement
-and unfinished vault/service provisioning; it is not a verified release flow.
+and a verified funded vault binding; actual OpenAI calls remain unverified and unauthorized.
 
 Policies now include an `asset` object (`kind`, `network`, `mint`, `symbol`,
 `decimals`) and `maxOutputTokens`. Omitted fields default to fixture units and
@@ -165,3 +165,16 @@ Devnet receipt reconciliation requires finality and matches the actual transacti
 signature/accounts against the program receipt. Usage distinguishes token amount,
 service delivery, transaction fee lamports and receipt-account rent. Neither SOL
 fees nor provider-dollar billing are silently deducted from the token allowance.
+
+## Existing-agent integration
+
+See [INTEGRATION.md](INTEGRATION.md) for the developer pilot and
+`examples/existing-agent/reference-tool.ts` for a framework-independent paid tool.
+The SDK now provides `waitForRequest(task, requestId, options)` with a 60-second
+(default) deadline, polling, optional approval notification and caller abort.
+It returns `{request, usage}` for succeeded/failed/cancelled requests. Usage may
+be absent, or may record a charge with failed delivery; inspect both outcomes.
+`PendingRequestError.requestId` identifies a still-pending request after the
+waiting deadline. Resume that request or reuse the exact idempotency key/payload;
+the helper never cancels, reapproves or resubmits another payment automatically.
+The agent needs only its scoped token and private gateway URL, never owner keys.

@@ -2,16 +2,44 @@
 
 ## Resume here
 
-Branch: `feat/vault-agent-dashboard`. Public replay is live:
-**https://agent-spend-control-replay.vercel.app**
+Branch: `feat/vault-agent-dashboard`. Priority has pivoted to **one developer
+integrating one governed tool into an existing agent**, before broad self-service
+onboarding or a public live backend. README is product-facing; operational
+history belongs here.
 
-Deployed source commit: `d7f4c26f7c050b57db766c281123d29d2fb8923d`.
-Vercel project: `agent-spend-control-replay` in `om-anands-projects` (Hobby).
-Production deployment: `dpl_8HBSdDX1sYWBo5QMe3kXfALGB8kN`, READY.
-Only the locally built replay artifact and public security configuration were
-uploaded: five files, no repository sources, private env/config or runtime.
-The operator console and all live execution remain private and stopped.
-See [public release evidence](deployments/public-replay.json).
+Public replay: **https://agent-spend-control-replay.vercel.app**. Last verified
+public release is recorded in [public-replay.json](deployments/public-replay.json).
+The private Integration workspace and external-agent tool are implemented and
+locally verified; the next real-world milestone is an outside developer pilot.
+No external adopter or customer integration is claimed yet.
+
+## Developer pilot increment — 2026-11-07
+
+Implemented:
+- Source-local `referenceTool` for an existing agent: scoped credentials only,
+  stable operation IDs, basic/premium service purchases, no model or owner signer.
+- SDK `waitForRequest`, approval notification, deadline/caller cancellation,
+  recoverable `PendingRequestError`, separate charge and delivery outcomes.
+- Private Integration screen: task selection/readiness, allowance/limits,
+  copyable code, setup progress, request outcomes and approval handoff. Credentials
+  are never rendered. Navigation icons are decorative for accessible button names.
+- Refined desktop/mobile integration design, plus a public developer-pilot entry
+  point and guide link. Public replay remains entirely read-only.
+- Professional README, integration guide, configuration template and runnable CLI.
+
+Verified:
+- TypeScript and private/public web builds; 14 Node tests.
+- 16 combined real PostgreSQL/local-Solana tests, including an independent agent
+  tool client: timeout recovery, no duplicate payment, exact approval, hard caps,
+  changed-payload conflict and separation of owner/agent authority.
+- Real Chrome + independent CLI process: basic 20 TEST payment, premium 40 TEST
+  approval and delivery, integration receipts, retry returning the same request,
+  1440/375px with no credential rendering or horizontal overflow. Screenshots
+  reviewed. Public production-artifact Chrome checks remain passing.
+
+Private local stack was started for verification with a new bounded task; it
+retains DB/ledger/wallet/access state. The pilot task has 60 TEST spent and 60
+remaining, with two settled deliveries. No Devnet or OpenAI execution occurred.
 
 ## Verified public release — 2026-11-07
 
@@ -151,17 +179,14 @@ DB least privilege, monitoring, rate limits, supervised schedules and broader
 security review remain product work. Actual OpenAI integration remains mock-
 tested only until fresh explicit cost authorization and secure configuration.
 
-## Preserved local state / next action
+## Next action
 
-The previous session's gateway, worker, owner synchronizer, reference service,
-PostgreSQL and validator remain stopped. This release used only temporary
-browser tests, static packaging and read-only chain inspection. Databases,
-validator ledger and private wallet/access files were retained. The last
-browser-tested local task is revoked as expected; seed a new bounded local task
-only when resuming the private workflow. Do not reset existing state.
-
-**Exact next action:** share the public replay and collect demo feedback. The next
-engineering milestone is Docker/private-stack runtime and DB backup/restore
-verification, followed by private hosted access checks. Public live visitor
-isolation is still unimplemented; no public execution or billable OpenAI calls.
-Do not run Solana deployment/upgrade commands to resume this work.
+Run the first real developer pilot using [INTEGRATION.md](INTEGRATION.md): choose
+an existing agent, connect only its paid-reference tool, collect setup friction
+and time-to-first-receipt, and verify approval/retry/revocation. Do not substitute
+our automated example for actual adoption evidence. Keep the operator stack
+private and test-token-only. Broad login/self-service, npm SDK distribution,
+additional service adapters and a hosted live backend remain later milestones.
+Docker/restore verification remains required before moving private infrastructure.
+Preserve Devnet deployment and all existing private state; no billable OpenAI
+calls, public live execution or x402 support are authorized/claimed.
