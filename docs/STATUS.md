@@ -1,306 +1,133 @@
 # Status — 2026-11-07
 
-## Hackathon delivery package — 2026-11-07
-
-The bounded one-agent/one-tool developer preview is the agreed hackathon scope.
-[SUBMISSION.md](SUBMISSION.md) contains the pitch, architecture diagram, evidence
-and simulation boundaries. [REHEARSAL.md](REHEARSAL.md) records repeatable setup
-and actual verification. Public submission page: `/submission.html` on the
-existing replay host. Anonymous hosted verification passed, including video
-playback and captions, no console errors, refresh and widths 1440/375/320.
-Deployed source: `e74a04eb71887116f48eb2b58b88ad78e54164b7`; deployment
-`dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh`. Eight served files match the audited
-nine-file package (including config). See [release record](deployments/public-replay.json).
-[PR #3](https://github.com/Andromeda-crypto/agent-spend-control/pull/3) carries
-the submission package; GitHub records check/merge status.
-
-Completed in this increment:
-- Standalone client integration on a fresh local task: 20/40 TEST deliveries,
-  exact owner approval, restarted-client same-request/no-duplicate-charge check,
-  desktop/mobile and no rendered credentials.
-- Separate fresh-task recorded research workflow: exact approval, actual local
-  payment/delivery, simulated report, confirmed local revocation, blocked-request
-  replay illustration and final report. Video: 37.5 seconds, silent, captioned,
-  time-compressed, permanent local-validator/simulation banner; no sign-in captured.
-- Submission page with video, source/evidence links and architecture overview;
-  Mermaid diagram and concise pitch in source documentation.
-- Stale architecture/hosting/CI claims reconciled with current implementation.
-- Human external developer unavailable: user selected **prepare handoff**.
-  [PILOT_HANDOFF.md](PILOT_HANDOFF.md) is ready. Independent adoption remains
-  unverified and is not represented by the separate-process repository test.
-
-Verification: TypeScript, both builds and 14 Node tests pass. Real Chrome
-production artifact checks pass for replay plus submission/video at 1440/375/320,
-including playback, deep links/refresh, restrictive CSP and static-only traffic.
-Original encoded video contact sheet reviewed; known credentials excluded from
-rendered frames. Private source frames/manifest stay ignored in `.local`.
-Existing Devnet evidence/program and all wallets/DB/validator state are preserved.
-No billable model call, public live execution or new Devnet transaction occurred.
-
-Next: share the hosted submission and repository; rehearse verbally with the
-recording/replay fallback. If an independent developer becomes available, run
-PILOT_HANDOFF acceptance. This is not a production/real-funds release; operational
-and security limitations below remain. Avoid expanding scope before submission.
-
 ## Resume here
 
-The approved **Orbit** layout is implemented in the public replay and private
-Overview/Integration screens. A shared presentation component connects the
-allowance hub to inspectable agent, request, receipt and policy nodes. The
-private console uses actual selected-task balances and states; public values
-remain explicitly recorded/illustrated. Owner approvals, signing and real
-execution remain private.
+The agreed hackathon deliverable is a bounded **one-agent / one-paid-tool developer
+preview**, with a polished public Orbit replay and working recording. Do not
+expand scope before submission. No external customer adoption is claimed.
 
-Prior Orbit baseline release: **https://agent-spend-control-replay.vercel.app**.
-Deployed source: `d0b4df3334220e6de75c82da3fd3e778f7cc400c`; deployment
-`dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Anonymous hosted verification and file
-hashes are in [public-replay.json](deployments/public-replay.json).
-[PR #2](https://github.com/Andromeda-crypto/agent-spend-control/pull/2) carries
-this increment. GitHub records its current check and merge status. Existing feature histories were merged through
-[PR #1](https://github.com/Andromeda-crypto/agent-spend-control/pull/1).
-No external customer adoption is claimed.
+**Submit:** https://agent-spend-control-replay.vercel.app/submission.html
 
-## Orbit interface increment — 2026-11-07
+**Interactive replay:** https://agent-spend-control-replay.vercel.app
 
-Implemented:
-- Reflective allowance hub, spatial agent/purchase/receipt nodes, matte contextual
-  decision bar and keyboard-operable Decisions/Receipts/Policy dock.
-- Expandable exact request, usage and policy details; payment and delivery remain
-  independent. Private inspection links lead to existing approval/receipt/setup
-  controls. The research action remains connected to the real private workflow.
-- Compact horizontal operator navigation, scrollable sections and stacked mobile
-  composition. Removed the generic public hero/KPI-card arrangement.
-- Shared `packages/ui/src/orbit.ts` and `orbit.css`; private data projection in
-  `apps/web/src/orbit-model.ts`. No privileged code enters the replay bundle.
-- Public integration documentation points to `main`; seven phase deep links,
-  recorded Devnet evidence, TEST/service and simulated-model labels remain.
+**Repository:** https://github.com/Andromeda-crypto/agent-spend-control
 
-Verified:
-- TypeScript, both production builds and 14 existing Node tests pass.
-- Chrome static replay: restrictive CSP, seven phases, loading/error, keyboard
-  focus, refresh and widths 1440/375/320; static GET requests only.
-- Read-only Chrome design checks: public nodes/inspection/dock, private overview
-  and Integration, modal fit/focus return, desktop/mobile, no credential rendering.
-- Full local Chrome lifecycle passes: masked sign-in/error, funded task, research,
-  exact approval, actual local 20/40 TEST payments, delivery/report, confirmed
-  revocation, keyboard/modal focus, offline recovery and refresh.
-- Anonymous hosted Chrome checks pass: HTTPS, security headers, direct phase
-  links/refresh, 1440/375/320px, correct Devnet Explorer links, no console errors,
-  privileged paths return 404, static GET-only traffic. Hosted files match the
-  five-file audited upload byte-for-byte.
-- Screenshots inspected. Existing backend/payment contracts are unchanged.
+[Submission brief](SUBMISSION.md) includes the pitch, architecture diagram,
+evidence and explicit simulation boundaries. [PR #3](https://github.com/Andromeda-crypto/agent-spend-control/pull/3)
+carries this package; GitHub records its check/merge status. Earlier development
+and Orbit histories were integrated through PRs #1 and #2. Preserve branch refs.
 
-No Devnet program upgrade, replacement buffer or Devnet transaction was made.
-Billable OpenAI calls remain unauthorized. Local verification uses preserved
-PostgreSQL/validator state and a fresh bounded local TEST task.
-
-## Developer pilot increment — 2026-11-07
-
-Implemented:
-- Source-local `referenceTool` for an existing agent: scoped credentials only,
-  stable operation IDs, basic/premium service purchases, no model or owner signer.
-- SDK `waitForRequest`, approval notification, deadline/caller cancellation,
-  recoverable `PendingRequestError`, separate charge and delivery outcomes.
-- Private Integration screen: task selection/readiness, allowance/limits,
-  copyable code, setup progress, request outcomes and approval handoff. Credentials
-  are never rendered. Navigation icons are decorative for accessible button names.
-- Refined desktop/mobile integration design, plus a public developer-pilot entry
-  point and guide link. Public replay remains entirely read-only.
-- Professional README, integration guide, configuration template and runnable CLI.
-
-Verified:
-- TypeScript and private/public web builds; 14 Node tests.
-- 16 combined real PostgreSQL/local-Solana tests, including an independent agent
-  tool client: timeout recovery, no duplicate payment, exact approval, hard caps,
-  changed-payload conflict and separation of owner/agent authority.
-- Real Chrome + independent CLI process: basic 20 TEST payment, premium 40 TEST
-  approval and delivery, integration receipts, retry returning the same request,
-  1440/375px with no credential rendering or horizontal overflow. Screenshots
-  reviewed. Public production-artifact and hosted Chrome checks pass; all public files
-  match the audit byte-for-byte, the developer guide returns 200, and no public
-  execution or private console was deployed.
-
-The private local stack was used for two pilots while retaining all state: the
-independent tool-client task has two settled deliveries (60 TEST spent), and a
-fresh task exercises the actual built-in research agent below. No Devnet or
-OpenAI execution occurred.
-
-## Selected internal research pilot
-
-User selected the existing `advanceResearch` agent at
-`examples/reference-agent/workflow.ts`. Both its basic and premium requests now
-call `submitReference` in `packages/sdk/src/reference-tool.ts`. The SDK exports
-both the shared submitter and external `referenceTool` wrapper; the original
-example module re-exports them for compatibility.
-
-Internal calls use a transaction-bound `Store.reserveTrusted` submission port,
-not HTTP or SDK polling under DB locks. The external wrapper uses the scoped
-HTTP SDK and waits outside server transactions. The internal pilot therefore
-preserves the existing trusted-worker boundary; external auth is separately tested.
-Premium payload, `research:<run-id>:2` key, exact owner hash/version approval,
-service scope, allowance enforcement and receipt/report evidence remain unchanged.
-The full integration tests explicitly verify those invariants, two paid deliveries,
-failed-delivery accounting, replay protection and simulated-model report labels.
-The existing research-agent Chrome walkthrough passed after this routing change:
-actual local payments and deliveries, exact approval, simulated report, reconnect,
-refresh and confirmed revocation. The fresh pilot task is now revoked as the test
-expects, with its receipts retained; the prior external-style task remains intact.
-The local stack is running at the printed private URL for review; starting another
-run requires a fresh bounded task or a suitable existing active task.
-See [minimum integration changes and assumptions](INTEGRATION.md#first-internal-pilot-existing-research-agent).
-
-## Verified public release — 2026-11-07
-
-- Anonymous HTTPS returns 200 without login or a protection bypass. The stable
-  production alias is public; deployment-specific/preview URLs may retain Vercel
-  authentication. Share the stable URL above.
-- Real Chrome: direct navigation and refresh for all seven `/#0`–`/#6` scenes,
-  keyboard navigation, 1440/375/320px layouts, no horizontal overflow or browser
-  JavaScript/console errors. Hosted screenshots inspected.
-- CSP restricts scripts/styles/connections to self; HSTS, nosniff, frame denial,
-  no-referrer and restricted Permissions-Policy observed on HTTPS responses.
-- Browser requests were same-origin static GETs only: no Authorization, API,
-  Solana RPC, model requests, wallet actions or live spending. Privileged and
-  private-file paths and unsupported routes return 404.
-- All four hosted public files match the audited build byte-for-byte.
-- Hosted evidence exactly matches the allowlisted Devnet checkpoint. Read-only
-  RPC independently reconfirmed both signatures finalized with no error. Both
-  correct `?cluster=devnet` Explorer links returned 200 in Chrome. A plain HTTP
-  client received Explorer 429; this third-party throttling does not affect the
-  replay or invalidate the independently checked transactions.
-- TypeScript, local production replay Chrome tests and static-package audit pass.
-  A post-deploy test harness fix handles hash navigation as a full-document check;
-  it changes no hosted replay assets. Deployment metadata confirms source SHA.
-- CLI 65.12.1 installed globally and authenticated as `andromeda-crypto`. Existing
-  Vercel plugin/connector retained. Connector project creation was denied; the
-  authenticated CLI fallback created/deployed the verified project successfully.
-  No duplicate project, Git auto-deploy connection, custom domain, paid service,
-  model call or new Solana transaction was created.
-
-**Preserved:** the verified Devnet program, authority, wallets, ledger and DB.
-No program redeploy, upgrade, replacement buffer or Devnet transaction was made
-in this increment. **Billable OpenAI calls remain unauthorized.** Launchers and
-private container configuration keep live execution false; model output is
-explicitly simulated. TEST token and reference service are self-operated.
-No x402 support is claimed.
-
-Program: `8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6`.
-Authority: `ATJeSsM6kshKaTp4MVipQaTksNpEdAvkYkc7ofY1rU9V`.
-Existing public proof: [deployment](deployments/devnet.json) and
-[two finalized payments](deployments/devnet-workflow.json).
-Last previously observed deployer balance: 0.41962504 test SOL; not refreshed in
-this increment. Private keys/access remain under ignored `.local/`.
+Public deployment: `dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh`.
+Deployed source: `e74a04eb71887116f48eb2b58b88ad78e54164b7`.
+[Release record](deployments/public-replay.json) has verification and file hashes.
+This is a manual static deployment; pushing Git does not auto-publish.
 
 ## Implemented
 
-- Existing owner/agent identity, rotations, tenant isolation, durable quota and
-  lifecycle, exact approvals, bounded Anchor vault, binding/provisioning,
-  reconciliation and actual paid service retained.
-- Operator UX: clear network/model label before sign-in, demo guide, visible
-  next action and research button, allowance definitions, exact approval context,
-  separate payment/delivery outcomes and expandable technical receipts.
-- Browser fixes: keyboard focus/open details survive polling, clearer errors and
-  loading, connection status and automatic recovery, refresh retains selected
-  task, confirmed chain revocation visible, improved narrow layout/contrast.
-- Credential values no longer rendered in creation/rotation dialogs; private
-  download only. Owner sign-in is masked. No credentials in public replay.
-- Separate `apps/replay` public build: seven-scene guided replay, self-operated
-  TEST/service and simulated-model labels, actual finalized payment evidence,
-  and explicitly illustrated blocked/revocation scenes. No API or signing path.
-- CI builds the separate replay artifact; merged main checks passed.
-- Separate Vite caches fix real blank-screen/504 caused by competing optimizers.
-  Launcher serves `/replay/` and preserves existing persistent local state.
-- Portable public/private Docker targets, Nginx, Compose and per-role environment
-  configuration. Private console bound only to loopback, public replay has no
-  gateway proxy, only owner-signing process receives owner signer mount.
-- [HOSTING.md](HOSTING.md): process placement, environment names, origins/auth,
-  restart/persistence, migration/restore and privilege boundaries.
-- [DEMO_SCRIPT.md](DEMO_SCRIPT.md): concise walkthrough, safe new-task procedure,
-  fresh-visitor instructions and labeled replay fallback.
+- Owner/agent identity, rotations, tenant isolation, payload-bound idempotency,
+  PostgreSQL task locking, durable requests/events/reservations and usage ledger.
+- Exact owner approval bound to purchase hash and policy version. Approval cannot
+  override hard caps. Pause/revoke stops new work; dispatched work is reconciled.
+- Worker/watch execution, persisted signed attempts, conservative reconciliation,
+  independent payment/delivery outcomes and separate owner-signing process.
+- Anchor token vault with mint/recipient, total/per-payment, expiry, exact
+  exception and revocation restrictions; existing verified Devnet deployment.
+- Internal research workflow uses shared `submitReference`; external clients use
+  scoped `referenceTool` and bounded SDK waiting. No HTTP/polling under DB locks.
+- Private Orbit Overview/Integration console: task data, approvals, receipts,
+  reports, setup, keyboard focus preservation and connection recovery.
+- Separate public static replay, seven phases and recorded finalized Devnet
+  evidence. No private runtime, API proxy, wallet or signing code is published.
+- Public submission page: pitch, architecture overview, source/evidence links,
+  37.5-second silent time-compressed working recording, captions and permanent
+  local-validator/self-operated TEST/simulated-model disclosure. Sign-in excluded.
+- Professional README, integration guide, fresh-task rehearsal, presenter script
+  and [independent developer handoff](PILOT_HANDOFF.md). Stale architecture,
+  hosting and CI claims reconciled.
+- Portable private/public container configuration and per-role environment
+  examples. Docker runtime remains unverified, not a production distribution.
 
-## Prior checkpoint verification — 2026-11-06
+## Verified
 
-- TypeScript check and both production web builds pass.
-- 10 Node tests, 7 real PostgreSQL/HTTP tests and 15 local program/full-workflow
-  integration tests pass. Dependency install audit: zero vulnerabilities.
-- Real Chrome walkthrough passes: masked sign-in/error, funded task, research,
-  actual local 20/40 TEST transfers, approval, report, revocation observed on
-  chain; keyboard/modal focus, offline/reconnect, refresh, desktop and 375px.
-- Production replay browser check covers restrictive CSP, public-evidence
-  allowlist, absence of operator code/known token, no API or Authorization
-  requests, loading/error, all scenes, focus/refresh and 1440/375/320px.
-- Screenshots inspected; findings/fixes in [BROWSER_QA.md](BROWSER_QA.md).
-- Both Compose files parse as YAML; Docker schema/runtime validation remains.
-- No privileged console was published and no real funds or billable API calls
-  were used. The public replay was subsequently published as described above.
+- TypeScript, both production builds and 14 Node tests pass in this increment.
+  Earlier combined PostgreSQL/local-Solana suite passed 16 tests. GitHub CI runs
+  PostgreSQL/HTTP checks as well as types, unit tests, terminal demo and builds.
+- Fresh standalone client rehearsal: separate Node processes, actual local basic
+  20 TEST and premium 40 TEST deliveries, exact owner approval, restarted-client
+  same-request/no-duplicate-charge check, desktop/mobile and no rendered secrets.
+- Separate fresh research task: allowed request → exact premium approval → local
+  payment/delivery → simulated report → confirmed local revocation → replay
+  blocked-request illustration/final report. Original recorded frames reviewed.
+- Earlier full Chrome lifecycle also covers masked sign-in/error, modal/keyboard
+  focus, offline recovery, refresh and retained open receipt details.
+- Production and anonymous hosted Chrome checks: HTTPS, restrictive headers,
+  seven phase links/refresh, submission direct navigation/refresh, video playback
+  and loaded captions, 1440/375/320px, Devnet links, no console/JS errors and no
+  privileged traffic. All eight served assets match the nine-file audited package
+  (including Vercel header config). Private/API paths return 404.
+- Hosted checking caught a missing favicon; fixed and verified. Initial video
+  encoding lacked drawtext; original successful-run frames were retained and
+  encoded with a code-rendered permanent banner, without repeating payments.
+- Details: [BROWSER_QA.md](BROWSER_QA.md), [REHEARSAL.md](REHEARSAL.md),
+  [rehearsal evidence](deployments/rehearsal.json).
 
-## Run / demonstrate
+## Independent developer gate
 
-External visitor / reliable fallback, no credentials or toolchain needed:
+No independent developer is currently available. User explicitly selected
+**prepare handoff**. The separate-process repository integration is verified;
+it is not an independent human adoption. The acceptance protocol is ready in
+[PILOT_HANDOFF.md](PILOT_HANDOFF.md). Mark this gate unverified until actual
+external feedback exists. No external pilot repository has been selected.
 
-```sh
-npm ci
-npm run replay:dev
-# Public artifact only:
-npm run replay:build
-npm run test:replay
-```
+## Preserved state and execution boundaries
 
-Private operator workflow (PostgreSQL 17 + existing Solana toolchain/build):
+Existing Devnet program: `8A12uxD8G5fpV1tAJja61EB7fhUwksmaDwjGB9uqqGe6`.
+Authority: `ATJeSsM6kshKaTp4MVipQaTksNpEdAvkYkc7ofY1rU9V`.
+[Deployment](deployments/devnet.json) and [two finalized payments](deployments/devnet-workflow.json)
+are unchanged. No redeploy, upgrade, replacement buffer or new Devnet transaction
+was made for this package. No billable OpenAI call was made or authorized.
+TEST token/reference service are self-operated; model output remains simulated.
+Token budgets do not cap provider dollar billing or SOL fees/rent. No x402 claim.
+
+Only the rehearsal's owned local processes were stopped, gracefully after ledger
+finality. Databases, validator ledger, private wallets/access files and prior
+receipts remain intact under ignored `.local/`. The latest local task completed
+and is revoked; use a fresh task for another execution. Earlier standalone-client
+tasks and their receipts are retained. No state reset occurred.
+
+## Next action / reproduce
+
+Share the submission link and repository, then rehearse the three-minute verbal
+pitch with the recording/replay fallback. If a developer becomes available, run
+the independent handoff. Further use cases and broad onboarding are deferred.
+
+Wallet-free replay: `npm ci` then `npm run replay:dev`.
+
+Private working flow (PostgreSQL 17 and existing Solana toolchain/build):
 
 ```sh
 PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run local:demo -- --new-task
-# While the stack runs, separate terminal:
+# In another terminal, choose one check for the fresh task:
+npm run test:agent-browser
+# OR full research workflow (revokes its task):
 npm run test:browser
+# OR credential-free recorded research workflow (Chrome + ffmpeg):
+node scripts/record-walkthrough.mjs
 ```
 
-Open printed dashboard URL, normally `http://127.0.0.1:5174`. Masked owner sign-in
-uses the private access file locally; never show it to an audience. The browser
-check consumes/revokes one local task, so use `--new-task` before repeating.
-The latest local access file points to a browser-tested, revoked task; seed a
-new task before starting another run. Prior tasks and receipts are preserved.
-Keep prior data; do not reset uncertain payments. Ctrl+C gracefully stops owned
-processes and waits for local ledger finality.
+Stop the launcher with Ctrl+C and **wait until it exits** before starting a new
+stack/task. Do not seed to clear uncertainty; preserve and reconcile it.
+See [LOCAL_DEMO.md](LOCAL_DEMO.md) and [REHEARSAL.md](REHEARSAL.md).
+Existing Devnet execution remains operator-controlled; do not run `devnet:deploy`
+merely to resume. Never publish the privileged console or repository root.
 
-Existing Devnet interactive demo remains operator-controlled:
-`PG_BIN=/opt/homebrew/opt/postgresql@17/bin npm run devnet:demo -- --new-task`.
-This funds another bounded TEST task using existing identities; it does not
-redeploy. It requires free test SOL for fees/rent. See [LOCAL_DEMO.md](LOCAL_DEMO.md).
-Do not run `devnet:deploy` merely to resume this work.
+## Remaining beyond hackathon scope
 
-## Hosted readiness / smallest blockers
-
-The public static replay is deployed and verified. There is no remaining hosting
-blocker for that read-only milestone. The current release is manually uploaded;
-repository pushes do not auto-publish. Rebuild/audit/redeploy only the isolated
-artifact, never deploy the repository root. See [HOSTING.md](HOSTING.md).
-
-Docker is unavailable here: Dockerfile image builds, Compose runtime and mounted
-signer UID access still need verification on a Docker-equipped machine. The
-private stack also needs DB backup/restore validation and SSH/VPN/tunnel checks
-before moving existing operator state. Public visitor execution isolation is
-not implemented: keep Devnet live execution private. The owner-signing process
-trusts the operator DB; it is not independent review against a compromised host.
-
-Native mobile/browser and screen-reader checks, hosted login/credential recovery,
-DB least privilege, monitoring, rate limits, supervised schedules and broader
-security review remain product work. Actual OpenAI integration remains mock-
-tested only until fresh explicit cost authorization and secure configuration.
-
-## Next action
-
-Review the public Orbit layout and private Integration screen with the next
-developer. The most recent full-browser local task completed and was revoked;
-use `--new-task` for another execution.
-Use [INTEGRATION.md](INTEGRATION.md) to connect the next agent: for the same
-reference service, supply scoped URL/task/token and replace one tool call while
-persisting operation IDs. A different paid tool needs its own validated wrapper,
-trusted adapter, gateway execution gating and compatible policy/binding; changing
-an endpoint alone is insufficient. Provider payment compatibility and idempotent
-lookup remain assumptions to verify. No actual external adopter is claimed.
-
-Keep the operator stack private and test-token-only. Broad login/self-service,
-npm SDK distribution, additional service adapters and a hosted live backend are
-later milestones. Docker/restore verification is still required before moving
-private infrastructure. Preserve Devnet and private state; no billable OpenAI,
-public live execution or x402 support is authorized/claimed.
+Independent developer feedback; production login/recovery; isolated public live
+sessions; independent signing review/security audit; DB least privilege;
+monitoring, rate limits and supervised deployment; pagination/retention and
+operator recovery tools. Docker runtime, signer mount permissions, private tunnel
+isolation and backup/restore still need verification before hosting private state.
+Native mobile/Safari and screen-reader review remain. SDK is source-local;
+additional paid tools require trusted adapters and verified provider semantics.
+Actual OpenAI adapter is mock-tested only until new explicit spending approval.
