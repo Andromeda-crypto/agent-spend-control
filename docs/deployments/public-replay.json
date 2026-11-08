@@ -1,14 +1,14 @@
 {
   "url": "https://agent-spend-control-replay.vercel.app",
-  "deploymentUrl": "https://agent-spend-control-replay-irujgs5gk-om-anands-projects.vercel.app",
-  "deploymentId": "dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4",
+  "deploymentUrl": "https://agent-spend-control-replay-62sk29e2s-om-anands-projects.vercel.app",
+  "deploymentId": "dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh",
   "project": "agent-spend-control-replay",
   "projectId": "prj_W4cajKyHwSpPwGc1CpszobIPTX7P",
   "teamId": "team_9YEej6OOcOp6uCXYUEMJPfBa",
   "target": "production",
   "readyState": "READY",
-  "sourceCommit": "d0b4df3334220e6de75c82da3fd3e778f7cc400c",
-  "verifiedAt": "2026-11-07T23:05:40.225Z",
+  "sourceCommit": "e74a04eb71887116f48eb2b58b88ad78e54164b7",
+  "verifiedAt": "2026-11-08T04:18:21.200Z",
   "headers": {
     "accept-ranges": "bytes",
     "access-control-allow-origin": "*",
@@ -18,9 +18,9 @@
     "content-length": "886",
     "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests",
     "content-type": "text/html; charset=utf-8",
-    "date": "Sat, 07 Nov 2026 23:05:33 GMT",
-    "etag": "\"6ce54ac924f24c1d049920e7c6988f10\"",
-    "last-modified": "Sat, 07 Nov 2026 23:05:33 GMT",
+    "date": "Sun, 08 Nov 2026 04:18:12 GMT",
+    "etag": "\"32068b75c66e705e0111dd321f7d0048\"",
+    "last-modified": "Sun, 08 Nov 2026 04:18:12 GMT",
     "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
     "referrer-policy": "no-referrer",
     "server": "Vercel",
@@ -28,7 +28,7 @@
     "x-content-type-options": "nosniff",
     "x-frame-options": "DENY",
     "x-vercel-cache": "MISS",
-    "x-vercel-id": "iad1::njnt4-1794092733116-d7e2ecfb2028"
+    "x-vercel-id": "iad1::n85xv-1794111492653-fdbccbf37039"
   },
   "evidenceSignatures": [
     "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
@@ -41,7 +41,7 @@
   ],
   "scenes": 7,
   "browserErrors": [],
-  "requestCount": 168,
+  "requestCount": 189,
   "publicWithoutAuth": true,
   "privilegedPaths404": true,
   "staticGetOnly": true,
@@ -54,7 +54,17 @@
     {
       "file": "index.html",
       "bytes": 886,
-      "sha256": "ac08fc5b7750b9be8749cc98eac41e58d30bc5bd44d2f93eb462736546452933"
+      "sha256": "b86e13be521364cd732a0e45d96aa7d4b08bb781fd6e205e30d98472af9c914e"
+    },
+    {
+      "file": "submission.css",
+      "bytes": 2654,
+      "sha256": "566cbf0c92910cd479af786ac13205b469735bf461ee4fb7e1905029da584b8b"
+    },
+    {
+      "file": "submission.html",
+      "bytes": 5624,
+      "sha256": "a035e855cd54a42b4221f7a9bd9065d085ba031f921912038fcf23406bc4687d"
     },
     {
       "file": "vercel.json",
@@ -62,14 +72,24 @@
       "sha256": "08b527f27def7bb4b6ff9ac41dad4bf462634444141927d2954baf767be219ad"
     },
     {
-      "file": "assets/index-B5zjba-1.js",
-      "bytes": 14441,
-      "sha256": "9e29e8dd9d15c4c392c303353a55d3cf06dfd39643a42fd4ca7e6284ad311089"
+      "file": "walkthrough.mp4",
+      "bytes": 650913,
+      "sha256": "e81eee8305e2059a92702d2bc48e12b02de5e191295328e087f81a7cfb279ab4"
+    },
+    {
+      "file": "walkthrough.vtt",
+      "bytes": 622,
+      "sha256": "42e998d2d30802da02842daf1e83138032022f19a885b8fe40c8e1c096b93fb5"
     },
     {
       "file": "assets/index-CIBsFY_C.css",
       "bytes": 15807,
       "sha256": "99b1dc99f1f9f92862f6f96bcb774737eab895cc70446faff5fb9c002fd354e0"
+    },
+    {
+      "file": "assets/index-DVsJ0jvV.js",
+      "bytes": 14482,
+      "sha256": "249cd767d4340f12d9666147fb27816cae75b63c1d14078f0e9c73c55b335f48"
     }
   ],
   "chainVerification": {
@@ -121,5 +141,10 @@
   ],
   "developerGuide": "https://github.com/Andromeda-crypto/agent-spend-control/blob/main/docs/INTEGRATION.md",
   "developerGuideStatus": 200,
-  "theme": "orbit-silver-graphite"
+  "theme": "orbit-silver-graphite",
+  "submissionRoute": "/submission.html",
+  "videoPlayback": true,
+  "captionsLoaded": true,
+  "submissionUrl": "https://agent-spend-control-replay.vercel.app/submission.html",
+  "videoSeconds": 37.5
 }

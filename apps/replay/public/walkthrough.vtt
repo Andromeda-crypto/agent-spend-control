@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:08.000
+Fresh task: 120 TEST allowance; actual LOCAL validator, simulated model
+
+00:00:08.000 --> 00:00:17.000
+Basic reference allowed; premium 40 TEST needs exact owner approval
+
+00:00:17.000 --> 00:00:24.000
+Payment and delivery settle separately; research report is simulated
+
+00:00:24.000 --> 00:00:29.000
+Revoke task and wait for local chain confirmation; new work disabled
+
+00:00:29.000 --> 00:00:34.000
+Public replay fallback illustrates a 61 TEST hard-cap rejection; no payment sent
+
+00:00:34.000 --> 00:00:37.500
+Final report simulated; public Devnet evidence is separately recorded

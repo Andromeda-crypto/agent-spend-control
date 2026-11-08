@@ -119,3 +119,18 @@ hosted static Orbit artifact passed anonymous HTTPS/headers, all seven phase
 deep links and refresh, 1440/375/320px, exact Devnet Explorer links, no browser
 errors and static same-origin GET-only traffic. Uploaded files match locally
 audited bytes; private API/configuration paths return 404.
+
+## Hackathon submission and working recording — 2026-11-07
+
+Fresh standalone agent/basic-premium integration passed with exact approval,
+actual local payments/delivery and same-ID no-duplicate retry. A separate fresh
+research task completed through confirmed local revocation; authenticated frames
+only were recorded, checked for known credentials and visually reviewed. The
+37.5-second time-compressed MP4 is silent, captioned and permanently labeled as
+local-validator/self-operated TEST/simulated-model execution.
+
+Production and anonymous hosted Chrome checks cover `/submission.html`, refresh,
+1440/375/320px, video playback and loaded captions, plus all existing replay
+phases/evidence. Hosted checking caught a missing favicon 404; an embedded public
+icon fixed it. Final hosted run has no console/JS errors or privileged traffic.
+Static file bytes match the nine-file audited package. Devnet was unchanged.

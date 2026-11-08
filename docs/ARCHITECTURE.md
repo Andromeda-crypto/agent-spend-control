@@ -31,9 +31,9 @@ under a different version. Existing dispatched work retains its reservation.
 
 Owner credentials are independent of task-scoped agent credentials. Credentials
 are SHA-256 hashes of high-entropy bearer tokens. Responses never include these
-hashes. Reusing an owner token reuses the workspace. Interactive login, owner
-credential rotation, explicit agent registry and resource-level database roles
-remain future work. Database access is privileged infrastructure authority.
+hashes. Reusing an owner token reuses the workspace. Explicit owner/agent identity records and credential rotation are implemented.
+Owner-key sign-in remains developer bootstrap; production account recovery, SSO
+and resource-level database roles remain future work. Database access is privileged infrastructure authority.
 There are no HTTP dispatch, completion or arbitrary-proxy endpoints.
 
 ## Execution and reconciliation
@@ -87,12 +87,12 @@ rows without a dispatch ID/version likewise require manual investigation.
 
 ## Remaining operational work
 
-The worker is a one-pass command, not a scheduler. Old unresolved requests may
-occupy the bounded reconciliation batch; fair retry scheduling/backoff and
-operator tooling are still needed. Provider-specific signatures, finality,
-real usage reconciliation, production rate limiting, retention/pagination,
-credential rotation and deployment checks remain outstanding. No production
-readiness or real-provider monetary-cap claim is made.
+The worker supports bounded passes and watch mode, including oldest-checked-first
+reconciliation. Signed Solana attempts and finalized Devnet receipts are persisted;
+uncertain execution stays reserved. Production process supervision, alerting,
+manual recovery tools, rate limiting, pagination/retention, backup/restore
+exercises and independent signing review remain outstanding. Provider dollar
+billing is not capped by the TEST allowance. No production readiness is claimed.
 
 ## Current checkpoint additions (2026-11-06)
 
@@ -111,15 +111,14 @@ persisted before submission; uncertain attempts are reconciled without creating
 another payment. Finalized receipts are required for Devnet delivery, while
 local tests use confirmed receipts.
 
-The earlier operational notes describe the previous checkpoint. Watch mode,
-oldest-checked-first polling, identity records/rotation and a fixture dashboard
-now exist. Pagination, production login, scheduler supervision, operator
-recovery tools and real-provider end-to-end verification remain outstanding.
-
-The SPA is a static Vite application, portable to static hosting. Development
-uses a same-origin /api proxy to the gateway. Production hosting and routing
-are not configured yet. DOM+HTTP tests verify its fixture workflow; visual,
-mobile and real-browser QA still need to be performed.
+The private console is a static Vite SPA with a same-origin `/api` proxy. The
+separate public Orbit replay is deployed on Vercel and contains no gateway or
+signing path. Portable public/private container configurations exist; their Docker
+runtime remains unverified. Real Chrome checks cover the private workflow,
+keyboard/modal focus, offline recovery, refresh and narrow layouts, plus hosted
+static replay headers/evidence and seven phase links. Native mobile/Safari and
+screen-reader review remain. See [HOSTING.md](HOSTING.md) and
+[BROWSER_QA.md](BROWSER_QA.md).
 
 ## Provisioning and test-cluster integration
 
@@ -154,4 +153,5 @@ https://github.com/solana-labs/solana/blob/master/sdk/src/genesis_config.rs
 They launch separate agent and owner processes, clear OpenAI keys from child
 execution environments, persist private state in ignored directories and stop
 only the processes they own. Interactive wallet onboarding, public-user custody,
-production service supervision, restore exercises and visual browser QA remain.
+production service supervision and restore exercises remain. Real Chrome visual
+and lifecycle QA is verified; native mobile and screen-reader review remain.

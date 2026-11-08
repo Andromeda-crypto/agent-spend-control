@@ -7,6 +7,8 @@ track each request from authorization through payment and delivery. Integrate
 one governed tool into an existing agent without replacing its framework or model.
 
 [Public demo](https://agent-spend-control-replay.vercel.app) ·
+[Submission & working video](https://agent-spend-control-replay.vercel.app/submission.html) ·
+[Submission package](docs/SUBMISSION.md) ·
 [Integration guide](docs/INTEGRATION.md) · [API reference](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md)
 

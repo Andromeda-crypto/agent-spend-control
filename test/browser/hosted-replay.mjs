@@ -32,8 +32,18 @@ try{
   await page.locator('#scene').scrollIntoViewIfNeeded();await page.screenshot({path:`.local/qa/hosted-replay-${width}.png`});
   await page.locator('#next').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('[aria-current]').getAttribute('data-scene'),'4');
  }
+ for(const width of [1440,375,320]){
+  await page.setViewportSize({width,height:900});const res=await page.goto(`${canonical}/submission.html`);assert.equal(res.status(),200);await page.reload();
+  await page.getByRole('heading',{name:'One task, from allowance to revocation.',exact:true}).waitFor();
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await page.locator('video').evaluate(v=>{v.muted=true;return v.play();});await page.waitForFunction(()=>document.querySelector('video').currentTime>0.1);
+  assert.equal(await page.locator('video').evaluate(v=>Math.round(v.duration*10)/10),37.5);
+  await page.locator('video').evaluate(v=>v.pause());
+  assert.equal(await page.locator('track').getAttribute('src'),'walkthrough.vtt');
+  assert.equal(await page.locator('video').evaluate(v=>v.textTracks[0].cues.length>0),true);
+ }
  assert.ok(requests.every(r=>r.method==='GET'&&!r.authorization&&new URL(r.url).origin===canonical&&!new URL(r.url).pathname.startsWith('/api')),'Browser must read only public same-origin assets');
  assert.deepEqual(errors,[],'No browser console or JS errors');
- await writeFile('.local/hosted-replay-verification.json',JSON.stringify({url:canonical,verifiedAt:new Date().toISOString(),headers,evidenceSignatures:evidence.receipts.map(r=>r.signature),widths:[1440,375,320],scenes:7,browserErrors:errors,requestCount:requests.length,publicWithoutAuth:true,privilegedPaths404:true,staticGetOnly:true},null,2)+'\n');
+ await writeFile('.local/hosted-replay-verification.json',JSON.stringify({url:canonical,verifiedAt:new Date().toISOString(),headers,evidenceSignatures:evidence.receipts.map(r=>r.signature),widths:[1440,375,320],scenes:7,browserErrors:errors,requestCount:requests.length,publicWithoutAuth:true,privilegedPaths404:true,staticGetOnly:true,submissionRoute:'/submission.html',videoPlayback:true,captionsLoaded:true},null,2)+'\n');
  console.log('Hosted Chrome checks passed: anonymous HTTPS, security headers, direct scene links/refresh, desktop/mobile, exact Devnet evidence, no errors/API calls or spending.');
 }finally{await browser.close();}
