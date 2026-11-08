@@ -1,14 +1,14 @@
 {
   "url": "https://agent-spend-control-replay.vercel.app",
-  "deploymentUrl": "https://agent-spend-control-replay-62sk29e2s-om-anands-projects.vercel.app",
-  "deploymentId": "dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh",
+  "deploymentUrl": "https://agent-spend-control-replay-1l6lj8eka-om-anands-projects.vercel.app",
+  "deploymentId": "dpl_Xf6fbeo1Sp1uDHWwRu8Y9f8WjUzy",
   "project": "agent-spend-control-replay",
   "projectId": "prj_W4cajKyHwSpPwGc1CpszobIPTX7P",
   "teamId": "team_9YEej6OOcOp6uCXYUEMJPfBa",
   "target": "production",
   "readyState": "READY",
-  "sourceCommit": "e74a04eb71887116f48eb2b58b88ad78e54164b7",
-  "verifiedAt": "2026-11-08T04:18:21.200Z",
+  "sourceCommit": "a94f448648ae458ca3c36672c8e109cd9655ba1c",
+  "verifiedAt": "2026-11-08T16:35:14.209Z",
   "headers": {
     "accept-ranges": "bytes",
     "access-control-allow-origin": "*",
@@ -18,9 +18,9 @@
     "content-length": "886",
     "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests",
     "content-type": "text/html; charset=utf-8",
-    "date": "Sun, 08 Nov 2026 04:18:12 GMT",
+    "date": "Sun, 08 Nov 2026 16:35:06 GMT",
     "etag": "\"32068b75c66e705e0111dd321f7d0048\"",
-    "last-modified": "Sun, 08 Nov 2026 04:18:12 GMT",
+    "last-modified": "Sun, 08 Nov 2026 16:35:06 GMT",
     "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
     "referrer-policy": "no-referrer",
     "server": "Vercel",
@@ -28,7 +28,7 @@
     "x-content-type-options": "nosniff",
     "x-frame-options": "DENY",
     "x-vercel-cache": "MISS",
-    "x-vercel-id": "iad1::n85xv-1794111492653-fdbccbf37039"
+    "x-vercel-id": "iad1::4fb5h-1794155705982-ab3650bf748f"
   },
   "evidenceSignatures": [
     "588T4pXQEqmAdV36VUE5RMwdy1yfTSi2DPeaxPnTw7vXVxNgUT1DwQQ1QnDh92Vd2DZvmx6JKJnXrj9tZjQBaJc9",
@@ -73,8 +73,8 @@
     },
     {
       "file": "walkthrough.mp4",
-      "bytes": 650913,
-      "sha256": "e81eee8305e2059a92702d2bc48e12b02de5e191295328e087f81a7cfb279ab4"
+      "bytes": 653027,
+      "sha256": "649c102882361686d559a342e060f6c928ddd55092d0c0f2f3a461066b236641"
     },
     {
       "file": "walkthrough.vtt",
@@ -146,5 +146,6 @@
   "videoPlayback": true,
   "captionsLoaded": true,
   "submissionUrl": "https://agent-spend-control-replay.vercel.app/submission.html",
-  "videoSeconds": 37.5
+  "videoSeconds": 37.5,
+  "videoOpeningNamesEvent": "Solana Hackathon"
 }
