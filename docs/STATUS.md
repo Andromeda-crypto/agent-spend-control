@@ -1,4 +1,21 @@
-# Status — 2026-11-07
+# Status — 2026-11-08
+
+## MLH submission in progress — November 8
+
+DevRelay installed and MLH connected; participant is checked in to Solana Hackathon.
+No MLH project/submission has been created yet: the event requires seven personal
+experience survey answers that are awaiting the user. User confirmed beginner
+eligibility and has no YouTube/Vimeo/Loom video URL. Prepared categories: Overall,
+Beginner, DeFi and AI (with explicit simulated-model disclosure); Gaming skipped.
+The hosted MP4 will be included as an extra link, not misrepresented as a supported
+video-platform URL. If MLH requires a supported host, report that blocker.
+
+The original recording now names **Solana Hackathon** in its opening banner; no
+workflow was rerun. Updated public video playback, captions, static-only traffic,
+responsive layouts and exact bytes are verified. PR #4 carries this correction.
+Resume from the prepared ignored `.local/mlh-submission-draft.json`, obtain the
+required survey answers and submit through DevRelay before 1:00 PM EST. Do not
+invent ratings/feedback or claim submission success without MLH confirmation.
 
 ## Resume here
 
@@ -17,8 +34,8 @@ evidence and explicit simulation boundaries. [PR #3](https://github.com/Andromed
 carries this package; GitHub records its check/merge status. Earlier development
 and Orbit histories were integrated through PRs #1 and #2. Preserve branch refs.
 
-Public deployment: `dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh`.
-Deployed source: `e74a04eb71887116f48eb2b58b88ad78e54164b7`.
+Public deployment: `dpl_Xf6fbeo1Sp1uDHWwRu8Y9f8WjUzy`.
+Deployed source: `a94f448648ae458ca3c36672c8e109cd9655ba1c`.
 [Release record](deployments/public-replay.json) has verification and file hashes.
 This is a manual static deployment; pushing Git does not auto-publish.
 

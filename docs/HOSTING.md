@@ -201,9 +201,13 @@ and captions require no API or credential. Raw frames and access files remain
 private. The package helper preserves binary bytes and rejects files outside the
 explicit allowlist. No hosted private stack or public execution is enabled.
 
-Current submission release: source `e74a04eb71887116f48eb2b58b88ad78e54164b7`,
-deployment `dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh`. Share
+Current submission release: source `a94f448648ae458ca3c36672c8e109cd9655ba1c`,
+deployment `dpl_Xf6fbeo1Sp1uDHWwRu8Y9f8WjUzy`. Share
 **https://agent-spend-control-replay.vercel.app/submission.html**. Anonymous
 Chrome verified direct navigation/refresh, 1440/375/320px, MP4 playback and loaded
 captions, all replay phases, security headers, Devnet links and no console errors
 or privileged requests. All eight served files match the reviewed package.
+
+November 8 preflight: the recording opening names Solana Hackathon. Original
+reviewed frames were re-encoded; duration/captions and private-state boundaries
+are unchanged. Hosted browser checks and artifact byte comparisons pass.
