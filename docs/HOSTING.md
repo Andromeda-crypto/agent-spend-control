@@ -177,10 +177,10 @@ External Explorer can throttle automated HTTP clients (429); both links returned
 finality. Native mobile/Safari and screen-reader audit, long-term uptime monitoring
 and the private hosted stack remain separate work. No Docker stack was deployed.
 
-## Current public Orbit release
+## Prior Orbit baseline release
 
 Stable submission URL: **https://agent-spend-control-replay.vercel.app**.
-The current release record is [public-replay.json](deployments/public-replay.json):
+The latest release record is [public-replay.json](deployments/public-replay.json):
 source `d0b4df3334220e6de75c82da3fd3e778f7cc400c`, deployment
 `dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Earlier releases remain in Git history.
 
@@ -200,3 +200,10 @@ The MP4 is reviewed local-validator execution, not new Devnet evidence. Playback
 and captions require no API or credential. Raw frames and access files remain
 private. The package helper preserves binary bytes and rejects files outside the
 explicit allowlist. No hosted private stack or public execution is enabled.
+
+Current submission release: source `e74a04eb71887116f48eb2b58b88ad78e54164b7`,
+deployment `dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh`. Share
+**https://agent-spend-control-replay.vercel.app/submission.html**. Anonymous
+Chrome verified direct navigation/refresh, 1440/375/320px, MP4 playback and loaded
+captions, all replay phases, security headers, Devnet links and no console errors
+or privileged requests. All eight served files match the reviewed package.

@@ -6,7 +6,13 @@ The bounded one-agent/one-tool developer preview is the agreed hackathon scope.
 [SUBMISSION.md](SUBMISSION.md) contains the pitch, architecture diagram, evidence
 and simulation boundaries. [REHEARSAL.md](REHEARSAL.md) records repeatable setup
 and actual verification. Public submission page: `/submission.html` on the
-existing replay host; deployment verification is recorded below when released.
+existing replay host. Anonymous hosted verification passed, including video
+playback and captions, no console errors, refresh and widths 1440/375/320.
+Deployed source: `e74a04eb71887116f48eb2b58b88ad78e54164b7`; deployment
+`dpl_7v9CBQnmmcEeZGg3Gg3szkiLdDWh`. Eight served files match the audited
+nine-file package (including config). See [release record](deployments/public-replay.json).
+[PR #3](https://github.com/Andromeda-crypto/agent-spend-control/pull/3) carries
+the submission package; GitHub records check/merge status.
 
 Completed in this increment:
 - Standalone client integration on a fresh local task: 20/40 TEST deliveries,
@@ -45,7 +51,7 @@ private console uses actual selected-task balances and states; public values
 remain explicitly recorded/illustrated. Owner approvals, signing and real
 execution remain private.
 
-Public Orbit release: **https://agent-spend-control-replay.vercel.app**.
+Prior Orbit baseline release: **https://agent-spend-control-replay.vercel.app**.
 Deployed source: `d0b4df3334220e6de75c82da3fd3e778f7cc400c`; deployment
 `dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Anonymous hosted verification and file
 hashes are in [public-replay.json](deployments/public-replay.json).
