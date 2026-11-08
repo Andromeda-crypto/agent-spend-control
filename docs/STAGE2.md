@@ -1,6 +1,16 @@
-# Solana preparation
+# Solana preparation and implementation record
 
-No Solana program or payments exist yet. No funds were spent.
+Current state: the restricted vault is implemented, locally tested and deployed
+on Devnet. Recorded finalized TEST payments and the current verification scope
+are linked in [STATUS.md](STATUS.md), [deployment evidence](deployments/devnet.json)
+and [payment evidence](deployments/devnet-workflow.json). Preserve that deployment;
+do not redeploy to resume a demonstration. The preparation notes below are
+historical, not current missing work.
+
+## Historical baseline and design plan
+
+At the initial baseline, no Solana program or payments existed and no funds had
+been spent.
 
 Tool inventory: Node v26.12.1 / npm 11.20.0 available. Docker, psql,
 Rust, Solana and Anchor were not found on PATH during baseline inspection.
