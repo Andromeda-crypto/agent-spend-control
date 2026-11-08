@@ -1,21 +1,25 @@
 # Status — 2026-11-08
 
-## MLH submission in progress — November 8
+## MLH submission complete — November 8
 
-DevRelay installed and MLH connected; participant is checked in to Solana Hackathon.
-No MLH project/submission has been created yet: the event requires seven personal
-experience survey answers that are awaiting the user. User confirmed beginner
-eligibility and has no YouTube/Vimeo/Loom video URL. Prepared categories: Overall,
-Beginner, DeFi and AI (with explicit simulated-model disclosure); Gaming skipped.
-The hosted MP4 will be included as an extra link, not misrepresented as a supported
-video-platform URL. If MLH requires a supported host, report that blocker.
+MLH confirmed Agent Spending Control at **11:39 AM EST**, with **Top 3 Overall,
+Best Beginner Hack, DeFi Track Top Prize and AI Track Top Prize** entries all
+submitted by **11:43 AM EST**, before the 1:00 PM EST deadline. Gaming skipped.
+Submitted as Om Anand; beginner eligibility confirmed. All requested metadata,
+AI-tool disclosure and category sponsor_usage answers were accepted. No manual
+field fallback is needed. These confirmations are not judging/prize results.
 
-The original recording now names **Solana Hackathon** in its opening banner; no
-workflow was rerun. Updated public video playback, captions, static-only traffic,
-responsive layouts and exact bytes are verified. PR #4 carries this correction.
-Resume from the prepared ignored `.local/mlh-submission-draft.json`, obtain the
-required survey answers and submit through DevRelay before 1:00 PM EST. Do not
-invent ratings/feedback or claim submission success without MLH confirmation.
+[Exact accepted project/category content and entry link](MLH_SUBMISSION.md).
+[YouTube demo](https://youtu.be/N3iYx9IKD7g). The original direct MP4 was rejected
+as the required video field; after the user supplied YouTube, the existing project
+was updated and all four entries succeeded. No duplicate project was created.
+The entry page requires MLH sign-in; the public demonstration remains anonymous.
+
+Exact survey answers/confirmation IDs are private in ignored
+`.local/mlh-submission-final.json`. User authorized average/neutral survey answers
+and Yes to resources/future-event interest. No further MLH submission action is
+pending. Keep the repo and video accessible and monitor judging. No billable
+model call, new Devnet transaction or private-state change occurred in submission.
 
 ## Resume here
 
