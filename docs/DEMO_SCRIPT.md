@@ -1,5 +1,10 @@
 # Three-minute demonstration
 
+Submission brief: [SUBMISSION.md](SUBMISSION.md). Working recording and captions
+are on the [public submission page](https://agent-spend-control-replay.vercel.app/submission.html).
+The 37.5-second silent recording is time-compressed local execution, not Devnet.
+[Reproduce the recording and separate-client rehearsal](REHEARSAL.md).
+
 Use the public read-only replay for an external audience. Use the private local
 or Devnet console only while supervised by the operator. Model output is always
 labeled **simulated**. TEST token and paid reference service are self-operated.

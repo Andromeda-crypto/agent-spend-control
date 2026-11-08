@@ -1,0 +1,37 @@
+{
+  "verifiedAt": "2026-11-07",
+  "cluster": "localnet",
+  "service": "self-operated TEST",
+  "model": "simulated",
+  "video": {
+    "path": "apps/replay/public/walkthrough.mp4",
+    "seconds": 37.5,
+    "bytes": 650913,
+    "sha256": "e81eee8305e2059a92702d2bc48e12b02de5e191295328e087f81a7cfb279ab4",
+    "silent": true,
+    "timeCompressed": true,
+    "captions": "apps/replay/public/walkthrough.vtt",
+    "permanentDisclosure": true,
+    "authenticationRecorded": false
+  },
+  "standaloneClient": {
+    "basicCharged": "20",
+    "premiumCharged": "40",
+    "delivery": "delivered",
+    "exactOwnerApproval": true,
+    "sameOperationRetryNoDuplicate": true,
+    "separateProcess": true
+  },
+  "freshResearchRehearsal": {
+    "completed": true,
+    "revocationConfirmed": true,
+    "reportSimulated": true,
+    "blockedScene": "illustration of locally tested restriction"
+  },
+  "independentExternalDeveloper": {
+    "verified": false,
+    "userSelected": "prepare handoff; no independent developer available yet"
+  },
+  "devnetUnchanged": true,
+  "billableModelCalls": 0
+}

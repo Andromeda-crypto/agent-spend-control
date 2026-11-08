@@ -133,12 +133,12 @@ bounded test-token session. These containers have not been run here because
 Docker is unavailable. Both Compose files parse as YAML with aliases; this
 is not Docker schema/runtime validation. No hosting account, paid service or DNS was provisioned.
 
-## Verified Vercel release — 2026-11-07
+## Initial Vercel release — 2026-11-07
 
 Public URL: **https://agent-spend-control-replay.vercel.app**.
 Project `agent-spend-control-replay`, ID `prj_W4cajKyHwSpPwGc1CpszobIPTX7P`,
 team `om-anands-projects` / `team_9YEej6OOcOp6uCXYUEMJPfBa`, Hobby.
-Source commit `d7f4c26f7c050b57db766c281123d29d2fb8923d`; public deployment
+Initial source commit `d7f4c26f7c050b57db766c281123d29d2fb8923d`; current deployment
 record: [public-replay.json](deployments/public-replay.json).
 
 The release uploaded five files: built HTML, JS, CSS, allowlisted evidence JSON
@@ -156,7 +156,7 @@ npm run test:replay
 node --import tsx scripts/package-replay.ts
 vercel project inspect agent-spend-control-replay --scope om-anands-projects
 vercel deploy --cwd .local/public-replay-deploy --project prj_W4cajKyHwSpPwGc1CpszobIPTX7P --scope om-anands-projects --prod --dry --json
-# Inspect the five-file manifest. Then explicitly deploy that same directory,
+# Inspect the allowlisted static manifest (nine files with submission/video). Then explicitly deploy that same directory,
 # using --meta sourceCommit=<full-reviewed-commit-SHA> to record provenance.
 # Never run deploy from the repository root or run env pull into the artifact.
 PUBLIC_REPLAY_URL=https://agent-spend-control-replay.vercel.app node test/browser/hosted-replay.mjs
@@ -167,7 +167,8 @@ staging paths. If it reports stale artifacts, inspect the generated staging
 folder; do not delete unrelated `.local` state. `vercel.json` supplies CSP,
 HSTS, nosniff, frame denial, Referrer-Policy and Permissions-Policy. No API proxy,
 functions, rewrites, backend, signer or wallet is part of this deployment.
-The only supported application path is `/`, with scene hashes `#0`–`#6`;
+Supported application pages are `/` (scene hashes `#0`–`#6`) and
+`/submission.html` (working recording and pitch);
 unsupported paths intentionally 404. Real Chrome verified direct scene navigation,
 refresh, 1440/375/320px, evidence, console silence and static-only GET requests.
 
@@ -176,26 +177,26 @@ External Explorer can throttle automated HTTP clients (429); both links returned
 finality. Native mobile/Safari and screen-reader audit, long-term uptime monitoring
 and the private hosted stack remain separate work. No Docker stack was deployed.
 
-## Developer-pilot site update
+## Current public Orbit release
 
-The stable public URL now includes the developer-pilot entry point and integration
-guide link. Updated deployed source:
-`6d3ff35c501cfeb3961bbf4f3e2cd51173517dac`, deployment
-`dpl_Ao9w3m39iS4CQ6EYkJWdEFQtVcay`. The public release record above tracks this
-latest version; the initial `d7f4c26` release remains in Git history.
-Only five static/config files were uploaded again. Hosted anonymous Chrome checks,
-security headers, all scene routes/refresh, 1440/375/320px, exact bytes, evidence
-and guide link passed. The operational Integration workspace is still private;
-this public update does not enable an agent API or wallet/signing access.
+Stable submission URL: **https://agent-spend-control-replay.vercel.app**.
+The current release record is [public-replay.json](deployments/public-replay.json):
+source `d0b4df3334220e6de75c82da3fd3e778f7cc400c`, deployment
+`dpl_E7VNoXSmPuSMfiTt9kdfuvTjC8E4`. Earlier releases remain in Git history.
 
-## Silver public release
+The public Orbit interface includes inspection nodes, seven workflow phases,
+recorded Devnet evidence and a developer integration guide linking to `main`.
+Anonymous hosted Chrome checks passed for HTTPS/security headers, phase links and
+refresh, 1440/375/320px layouts, exact artifact bytes and no privileged requests.
+Only five static/config files were uploaded. The operator workbench stays private.
+PR #2 merged the source into main; Git pushes do not auto-publish to Vercel.
+Never deploy the privileged repository root or upload private runtime files.
 
-Latest verified silver/graphite source is
-`bcdfc291f01edf6560066f3b246a7af406fa037a`, production deployment
-`dpl_B5N29CbH8PMFkzTss5dZmBs9k2JK`. The stable public URL is unchanged.
-Anonymous hosted Chrome checks pass, including seven replay scenes/refresh,
-desktop/narrow layouts, security headers and no privileged requests. All four
-served files match the audited artifact. Only static assets and public header
-configuration were uploaded; the scrollable operator workbench stays private.
-Merge-to-main delivery is tracked in PR #1. This does not enable Git auto-deploy;
-never point Vercel at the privileged repository root or upload private runtime.
+## Submission package assets
+
+The submission adds `submission.html`, `submission.css`, `walkthrough.mp4` and
+`walkthrough.vtt` to the audited static package (nine files including config).
+The MP4 is reviewed local-validator execution, not new Devnet evidence. Playback
+and captions require no API or credential. Raw frames and access files remain
+private. The package helper preserves binary bytes and rejects files outside the
+explicit allowlist. No hosted private stack or public execution is enabled.

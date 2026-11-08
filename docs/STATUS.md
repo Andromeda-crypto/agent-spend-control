@@ -1,5 +1,41 @@
 # Status — 2026-11-07
 
+## Hackathon delivery package — 2026-11-07
+
+The bounded one-agent/one-tool developer preview is the agreed hackathon scope.
+[SUBMISSION.md](SUBMISSION.md) contains the pitch, architecture diagram, evidence
+and simulation boundaries. [REHEARSAL.md](REHEARSAL.md) records repeatable setup
+and actual verification. Public submission page: `/submission.html` on the
+existing replay host; deployment verification is recorded below when released.
+
+Completed in this increment:
+- Standalone client integration on a fresh local task: 20/40 TEST deliveries,
+  exact owner approval, restarted-client same-request/no-duplicate-charge check,
+  desktop/mobile and no rendered credentials.
+- Separate fresh-task recorded research workflow: exact approval, actual local
+  payment/delivery, simulated report, confirmed local revocation, blocked-request
+  replay illustration and final report. Video: 37.5 seconds, silent, captioned,
+  time-compressed, permanent local-validator/simulation banner; no sign-in captured.
+- Submission page with video, source/evidence links and architecture overview;
+  Mermaid diagram and concise pitch in source documentation.
+- Stale architecture/hosting/CI claims reconciled with current implementation.
+- Human external developer unavailable: user selected **prepare handoff**.
+  [PILOT_HANDOFF.md](PILOT_HANDOFF.md) is ready. Independent adoption remains
+  unverified and is not represented by the separate-process repository test.
+
+Verification: TypeScript, both builds and 14 Node tests pass. Real Chrome
+production artifact checks pass for replay plus submission/video at 1440/375/320,
+including playback, deep links/refresh, restrictive CSP and static-only traffic.
+Original encoded video contact sheet reviewed; known credentials excluded from
+rendered frames. Private source frames/manifest stay ignored in `.local`.
+Existing Devnet evidence/program and all wallets/DB/validator state are preserved.
+No billable model call, public live execution or new Devnet transaction occurred.
+
+Next: share the hosted submission and repository; rehearse verbally with the
+recording/replay fallback. If an independent developer becomes available, run
+PILOT_HANDOFF acceptance. This is not a production/real-funds release; operational
+and security limitations below remain. Avoid expanding scope before submission.
+
 ## Resume here
 
 The approved **Orbit** layout is implemented in the public replay and private
@@ -165,7 +201,7 @@ this increment. Private keys/access remain under ignored `.local/`.
 - Separate `apps/replay` public build: seven-scene guided replay, self-operated
   TEST/service and simulated-model labels, actual finalized payment evidence,
   and explicitly illustrated blocked/revocation scenes. No API or signing path.
-- CI now builds the separate replay artifact (remote CI has not run here).
+- CI builds the separate replay artifact; merged main checks passed.
 - Separate Vite caches fix real blank-screen/504 caused by competing optimizers.
   Launcher serves `/replay/` and preserves existing persistent local state.
 - Portable public/private Docker targets, Nginx, Compose and per-role environment
